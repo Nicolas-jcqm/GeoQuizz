@@ -1,7 +1,18 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <button class="btn-blue"> jouer </button>
+    <div v-if="user.pseudo==''">
+      <form @submit.prevent="log()" class="form-sign">
+        <label>Votre pseudo pour cette session de jeu : </label>
+        <input v-model="user.pseudo" v-validate:comment="['required']" id="pseudo" />
+        <br>
+        <br>
+        <input type="submit"class="btn-blue" value="Jouer"></input>
+      </form>
+    </div>
+    <div v-else>
+      
+    </div>
   </div>
 </template>
 
@@ -10,7 +21,15 @@ export default {
   name: 'Home',
   data () {
     return {
-      msg: 'GeoQuizz'
+      msg: 'GeoQuizz',
+      user: {
+        pseudo: ""
+      }
+    }
+  },
+  methods:{
+    log(){
+      
     }
   }
 }
