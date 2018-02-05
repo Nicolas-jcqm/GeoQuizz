@@ -1,22 +1,31 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <div v-if="true">
+    <img id="logo" src="../assets/map.png">
+    <div v-if="Pseudo==''">
       <form @submit.prevent="log()" class="form-sign">
         <label>Votre pseudo pour cette session de jeu : </label>
-        <input v-model="pseudo" ref="pseudo" v-validate:comment="['required']" id="pseudo" />
+        <input ref="pseudo" id="pseudo" />
         <br>
         <br>
-        <input v-if="" type="submit"class="btn-blue" value="Jouer"></input>
+        <input type="submit"class="btn-blue" value="Jouer"></input>
       </form>
     </div>
     <div v-else>
-      
+      <p>Liste des séries</p>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/api'
+    import Vuex from 'vuex'
+    import {
+        mapActions
+    } from 'vuex'
+    import {
+        mapState
+    } from 'vuex'
 export default {
   computed:{
     ...mapState(['Pseudo'])
@@ -29,8 +38,9 @@ export default {
     }
   },
   methods:{
+
     log(){
-      this.$store.commit('logGame',this.$refs.pseudo.value);
+      this.$store.dispatch('logStore',this.$refs.pseudo.value);
     }
   }
 }
