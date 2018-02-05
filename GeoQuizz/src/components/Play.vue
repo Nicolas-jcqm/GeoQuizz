@@ -1,6 +1,10 @@
 <template>
   <div class="play">
         <div class="windows">
+            <p>question actuel : {{ question_actuel }} / 10</p>
+            <p>{{ name }}</p>
+            <div class="image"></div>
+            <div class="map"></div>
         </div>
   </div>
 </template>
@@ -14,10 +18,11 @@
     import {
         mapState
     } from 'vuex'
+
     export default {
-        name: 'Play',
+
         computed: {
-            ...mapState([])
+            ...mapState(['name'])
         },
 
         created() {

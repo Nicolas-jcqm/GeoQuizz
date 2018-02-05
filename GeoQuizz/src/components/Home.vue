@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <img id="logo" src="../assets/map.png">
     <div v-if="user.pseudo==''">
       <form @submit.prevent="log()" class="form-sign">
         <label>Votre pseudo pour cette session de jeu : </label>
