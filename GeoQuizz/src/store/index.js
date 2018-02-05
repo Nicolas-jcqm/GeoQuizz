@@ -11,6 +11,9 @@ export default new Vuex.Store({
     modules: {
     },
     state: {
+        question_actuel: 0, //donné en brut
+        images: {},
+        name: 'test'
     },
     getters: {
     },
