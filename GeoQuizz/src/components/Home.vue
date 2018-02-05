@@ -1,13 +1,13 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <div v-if="user.pseudo==''">
+    <div v-if="true">
       <form @submit.prevent="log()" class="form-sign">
         <label>Votre pseudo pour cette session de jeu : </label>
-        <input v-model="user.pseudo" v-validate:comment="['required']" id="pseudo" />
+        <input v-model="pseudo" ref="pseudo" v-validate:comment="['required']" id="pseudo" />
         <br>
         <br>
-        <input type="submit"class="btn-blue" value="Jouer"></input>
+        <input v-if="" type="submit"class="btn-blue" value="Jouer"></input>
       </form>
     </div>
     <div v-else>
@@ -18,18 +18,19 @@
 
 <script>
 export default {
+  computed:{
+    ...mapState(['Pseudo'])
+  },
+
   name: 'Home',
   data () {
     return {
       msg: 'GeoQuizz',
-      user: {
-        pseudo: ""
-      }
     }
   },
   methods:{
     log(){
-      
+      this.$store.commit('logGame',this.$refs.pseudo.value);
     }
   }
 }

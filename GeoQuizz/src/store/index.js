@@ -11,10 +11,14 @@ export default new Vuex.Store({
     modules: {
     },
     state: {
+        Pseudo:""
     },
     getters: {
     },
     mutations: {
+        logGame(state, pseudo){
+            state.Pseudo: pseudo
+        }
     },
     actions: {
     }
