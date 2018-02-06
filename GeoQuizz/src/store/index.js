@@ -11,6 +11,7 @@ export default new Vuex.Store({
     modules: {
     },
     state: {
+        Pseudo:"",
         question_actuel: 0, //donné en brut
         images: {},
         name: 'test'
@@ -18,7 +19,18 @@ export default new Vuex.Store({
     getters: {
     },
     mutations: {
+        logGame(state, pseudo){
+            state.Pseudo= pseudo
+        }
     },
     actions: {
+        logStore({
+            commit, state
+        },pseudo){
+            commit('logGame',pseudo)
+        }
+            
+            
+        
     }
 });
