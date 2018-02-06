@@ -3,13 +3,14 @@
   <div class="play">
         <div class="windows">
             <p id='question'>question actuel : {{ question_actuel }} / 10</p>
-            <div class="image"><img src="http://via.placeholder.com/500x500"></div>
+            <div class="image"><img v-bind:src=images_actuel></div>
             <div id="map">
                 <v-map :zoom=13 :center="[47.413220, -1.219482]">
                 <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
                 <v-marker :lat-lng="[47, 0]"></v-marker>
                 </v-map>
             </div>
+            <button type="button" class="btn" @click="next()">Question suivante</button>
         </div>
   </div>
 </template>
@@ -33,13 +34,27 @@
     export default {
 
         computed: {
-            ...mapState(['name', 'question_actuel'])
+            ...mapState(['question_actuel','images_actuel','serie_actuel','score_final','coordonné_actuel'])
         },
 
         created() {
-
+            //dispatch
+            this.$store.dispatch('created_data')
         },
-        methods: {}
+        methods: {
+            
+            next(){
+                console.log("next_question")
+                //recupere le marqueur
+                
+                //calculer la distance entre marqueur et les coordonnées
+                let distance_calcule = 0
+                //dispatch
+                this.$store.dispatch('next_question', distance_calcule)
+                
+                //reset le markeur
+            }
+        }
 
     }
 
@@ -69,6 +84,11 @@
     
     #question{
         width: 100%;
+    }
+    
+    .btn{
+        margin-top : 50px;
+        width: 80%;
     }
 
 </style>
