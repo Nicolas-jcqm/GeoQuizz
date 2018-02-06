@@ -12,7 +12,11 @@
       </form>
     </div>
     <div v-else>
-      <p>Liste des séries</p>
+    <div v-for></div>
+      <h2>Cliquez sur une série pour lancer la partie</h2>
+      <div v-for="serie in OSeries.series">
+        <a v-on:click="createPartie(serie.id)" href="#"><h1>{{serie.ville}}</h1></a>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +32,7 @@ import api from '@/api'
     } from 'vuex'
 export default {
   computed:{
-    ...mapState(['Pseudo'])
+    ...mapState(['Pseudo', 'OSeries'])
   },
 
   name: 'Home',
@@ -41,6 +45,10 @@ export default {
 
     log(){
       this.$store.dispatch('logStore',this.$refs.pseudo.value);
+    },
+
+    createPartie(idserie){
+      this.$store.dispatch('createPartieStore', idserie);
     }
   }
 }
