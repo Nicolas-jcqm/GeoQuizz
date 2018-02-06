@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <router-view :key="$route.fullPath"/>
   </div>
 </template>
 
@@ -20,4 +19,6 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+
+
 </style>
