@@ -4,10 +4,10 @@
 			<button  v-on:click="logout()">déconnexion</button>
 			<h2>Séries</h2>
 			<p id="add">
-					<router-link :to="{ path: '/' }">Créer une Série</router-link>
+					<router-link :to="{ path: '/home' }">Créer une Série</router-link>
 			</P>
 			<p v-for="ser in series" class="ser">
-				<router-link :to="{ path: '/' + ser._id }">{{ser.label}}</router-link>
+				<router-link :to="{ path: '/home' + ser._id }">{{ser.label}}</router-link>
 			</p>
 
 		</div>
@@ -28,7 +28,7 @@ export default {
 	methods:{
 		logout(){
 				this.$store.dispatch('auth/logout',true);
-				this.$router.push({path:'/'});
+				this.$router.push({name:'signup'});
 		}
 	},
 	created () {
@@ -47,18 +47,18 @@ export default {
 
 <style lang="css" scoped>
 	#container {
-		height: 100%;
+		height: 100vh;
 		width: 100%;
 		display: flex;
 	}
-	#series {
+	#series{
 	list-style-type:none;
  margin: 0;
  padding: 0;
  width: 25%;
  background-color: #f1f1f1;
  position: fixed;
- height: 100%;
+ height: 100vh;
  overflow: auto;
 	}
 	h2 {
@@ -67,7 +67,7 @@ export default {
 		margin: 0;
 		padding-bottom: 5px;
 		padding-top: 5px;
-		border-bottom: 2px solid deepskyblue;
+		border-bottom: 2px solid Tomato;
 	}
 
 	.ser {
@@ -80,7 +80,7 @@ export default {
  	text-decoration: none;
 	}
  	.ser a:hover{
-    background-color:deepskyblue;
+    background-color:Tomato;
     color: white;
 }
 button{
@@ -97,10 +97,10 @@ button,#add a{
 color: white;
 padding: 8px 16px;
 text-decoration: none;
-background-color:deepskyblue;
+background-color:Tomato;
 }
 button:hover,#add a:hover{
-	background-color:dodgerblue;
+	background-color: deepskyblue;
 }
 #right{
 width:75%;

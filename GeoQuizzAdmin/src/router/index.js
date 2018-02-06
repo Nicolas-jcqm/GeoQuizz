@@ -7,15 +7,10 @@ import  Serie from '@/components/Serie'
 import store from '@/store'
 Vue.use(Router)
 
-export default new Router({
+export  const router= new Router({
   routes: [
     {
-      path: '/signup',
-      name: 'Signup',
-      component: Signup
-    },
-    {
-      path:'',
+      path:'/home',
       name:'home',
       component:Home,
       children:[
@@ -28,15 +23,19 @@ export default new Router({
           component:Serie
         }
       ]
-    }
+    },
+    {
+        path: '',
+        name: 'signup',
+        component: Signup
+      }
   ]
 })
 router.beforeEach((to, from, next) => {
-	if(to.name != 'signin' && ! store.getters['auth/isConnected']) {
-    next({name: 'signin', query: {redirect: to.fullPath}})
+	if(to.name != 'signup' && ! store.getters['auth/isConnected']) {
+    next({name: 'signup', query: {redirect: to.fullPath}})
   }
-  else if (to.name == 'signin' && store.getters['auth/isConnected']) {
-    console.log("test test test")
+  else if (to.name == 'signup' && store.getters['auth/isConnected']) {
   	next({name: 'home'})
   }
   else {

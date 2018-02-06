@@ -92,18 +92,18 @@ display:inline-flex;
 }
 .btn-blue {
   background-color: transparent;
-  border: 0.16em solid Lightsteelblue;
-  color: Lightsteelblue; }
+  border: 0.16em solid Tomato;
+  color: Tomato; }
   .btn-blue a {
-    color: Lightsteelblue; }
+    color: Tomato; }
   .btn-blue:hover {
-    color: Tomato;
-    border-color: Tomato; }
-    .btn-blue:hover a {
-      color: Tomato; }
-  .btn-blue:active {
     color: Lightsteelblue;
     border-color: Lightsteelblue; }
+    .btn-blue:hover a {
+      color: lightsteelblue; }
+  .btn-blue:active {
+    color: Tomato;
+    border-color: Tomato; }
     input[type=text], input[type=password] {
         width: 100%;
         padding: 12px 20px;
@@ -113,7 +113,7 @@ display:inline-flex;
         box-sizing: border-box;
     }
     input[type=submit] {
-        background-color: deepskyblue;
+        background-color: Tomato;
         color: white;
         padding: 14px 20px;
         margin: 8px 0;

@@ -40,7 +40,7 @@ export default {
 		createSer () {
 			/*
 			this.$store.dispatch('Ser/createSer', this.serieData).then(response => {
-				this.$router.push({path: '/'})
+				this.$router.push({name: 'home'})
 			})
 			*/arguments
 			let params = {
@@ -51,7 +51,7 @@ export default {
                 longitude: this.serieData.longitude
             }
             api.post('/series', params).then(response => { // route a changer
-				this.$router.push({path: '/' + response.data._id})
+				this.$router.push({name: 'home' + response.data._id})
 			}).catch(error => {
 				alert("Une série  ayant déjà ce nom existe déjà !")
 			})
@@ -69,7 +69,7 @@ margin-top: 50vh;
  transform: translateY(-50%);
 }
 #formule h1{
-	color:deepskyblue;
+	color:Tomato;
 }
 input[type=text] {
 		width: 100%;
@@ -80,7 +80,7 @@ input[type=text] {
 		box-sizing: border-box;
 }
 input[type=submit] {
-		background-color: deepskyblue;
+		background-color: Tomato;
 		color: white;
 		padding: 14px 20px;
 		margin: 8px 0;

@@ -3,7 +3,7 @@
 			<h1>{{series.filter( (ser) => ser._id === idSerie)[0].label}}
                 <button class="button" id="edit-button" @click="showModal()">Edit</button>
             </h1>
-        <modal name="modal">
+        <modal name="modal">//devient modal
             <h2>Modifier serie</h2>
             <form>
                 <p>Entrer nouvelles informations:</p>
@@ -52,7 +52,7 @@ export default {
 	methods: {
         deleteSer () {
             api.delete('/series/' + this.idSerie).then((response) => { // route à changer
-                this.$router.push({path: '/'})
+                this.$router.push({name: 'signup'})
             }).catch( (error) => {
                 alert("La série que vous essayez de supprimer n'existe pas !")
             });
@@ -87,11 +87,12 @@ export default {
 	}
 }
 </script>
+/**
 .v--modal-overlay[data-modal="modal"] form {
     padding-left: 20px;
 }
 .v--modal-overlay[data-modal="modal"] h2 {
-    background: deepskyblue;
+    background: Tomato;
     padding: 10px;
     margin: 0;
     color: white;
@@ -99,6 +100,7 @@ export default {
 .v--modal-overlay[data-modal="modal"] p {
     margin-bottom: 25px;
 }
+**/
 .button{
 color: white;
 padding: 14px 20px;

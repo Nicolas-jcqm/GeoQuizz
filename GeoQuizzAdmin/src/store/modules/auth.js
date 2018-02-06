@@ -40,7 +40,7 @@ export default {
 		},
 		signup ({commit},credentials){
 			return api.post('/members', credentials).then(response => {  // route a modifier
-				return api.post('/members/signin', credentials).then(response => {
+				return api.post('/members/signin', credentials).then(response => { //route a modifier
 					ls.set('token', response.data.token)
 					commit("setConnectedUser", response.data)
 				}).catch(error => {
