@@ -2,35 +2,45 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <img id="logo" src="../assets/map.png">
-    <div v-if="user.pseudo==''">
+    <div v-if="Pseudo==''">
       <form @submit.prevent="log()" class="form-sign">
         <label>Votre pseudo pour cette session de jeu : </label>
-        <input v-model="user.pseudo" v-validate:comment="['required']" id="pseudo" />
+        <input ref="pseudo" id="pseudo" />
         <br>
         <br>
         <input type="submit"class="btn-blue" value="Jouer"></input>
       </form>
     </div>
     <div v-else>
-      
+      <p>Liste des séries</p>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/api'
+    import Vuex from 'vuex'
+    import {
+        mapActions
+    } from 'vuex'
+    import {
+        mapState
+    } from 'vuex'
 export default {
+  computed:{
+    ...mapState(['Pseudo'])
+  },
+
   name: 'Home',
   data () {
     return {
       msg: 'GeoQuizz',
-      user: {
-        pseudo: ""
-      }
     }
   },
   methods:{
+
     log(){
-      
+      this.$store.dispatch('logStore',this.$refs.pseudo.value);
     }
   }
 }

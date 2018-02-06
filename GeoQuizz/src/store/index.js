@@ -10,6 +10,7 @@ export default new Vuex.Store({
     plugins: [createPersistedState()],
     modules: {},
     state: {
+        Pseudo:"",
         question_actuel: 0,
         images_actuel: 0,
         serie_actuel: 0,
@@ -20,6 +21,10 @@ export default new Vuex.Store({
     },
     getters: {},
     mutations: {
+
+        logGame(state, pseudo){
+            state.Pseudo= pseudo
+        },
         initQuestion(state) {
             state.question_actuel = 1
         },
@@ -34,6 +39,11 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        logStore({
+            commit, state
+        },pseudo){
+            commit('logGame',pseudo)
+        }
 
         created_data({
             commit,
