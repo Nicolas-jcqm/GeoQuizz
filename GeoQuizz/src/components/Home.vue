@@ -2,35 +2,53 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <img id="logo" src="../assets/map.png">
-    <div v-if="user.pseudo==''">
+    <div v-if="Pseudo==''">
       <form @submit.prevent="log()" class="form-sign">
         <label>Votre pseudo pour cette session de jeu : </label>
-        <input v-model="user.pseudo" v-validate:comment="['required']" id="pseudo" />
+        <input ref="pseudo" id="pseudo" />
         <br>
         <br>
         <input type="submit"class="btn-blue" value="Jouer"></input>
       </form>
     </div>
     <div v-else>
-      
+    <div v-for></div>
+      <h2>Cliquez sur une série pour lancer la partie</h2>
+      <div v-for="serie in OSeries.series">
+        <a v-on:click="createPartie(serie.id)" href="#"><h1>{{serie.ville}}</h1></a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import api from '@/api'
+    import Vuex from 'vuex'
+    import {
+        mapActions
+    } from 'vuex'
+    import {
+        mapState
+    } from 'vuex'
 export default {
+  computed:{
+    ...mapState(['Pseudo', 'OSeries'])
+  },
+
   name: 'Home',
   data () {
     return {
       msg: 'GeoQuizz',
-      user: {
-        pseudo: ""
-      }
     }
   },
   methods:{
+
     log(){
-      
+      this.$store.dispatch('logStore',this.$refs.pseudo.value);
+    },
+
+    createPartie(idserie){
+      this.$store.dispatch('createPartieStore', idserie);
     }
   }
 }

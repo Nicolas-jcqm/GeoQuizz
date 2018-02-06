@@ -12,6 +12,15 @@ export default new Vuex.Store({
     state: {
         jeux_finit: 0,
         question_total: 0,
+        Pseudo:"",
+        OSeries: {"series":[{
+            "id": "idNancy",
+            "ville": "Nancy"
+        },{
+            "id": "idParis",
+            "ville": "Paris"
+        }]
+        },
         question_actuel: 0,
         images_actuel: 0,
         serie_actuel: 0,
@@ -72,12 +81,22 @@ export default new Vuex.Store({
 
     getters: {},
     mutations: {
+
         initJeux(state, total) {
             state.jeux_finit = 0
         },
         jeuxEnd(state) {
             state.jeux_finit = 1
         },
+
+        logGame(state, pseudo){
+            state.Pseudo= pseudo
+        },
+
+        createPartieGame(state, listepartie){
+            state.parties=listepartie
+        },
+  
         initQuestion(state, total) {
             state.question_actuel = 1
             state.question_total = total
@@ -99,6 +118,17 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        logStore({
+            commit, state
+        },pseudo){
+            commit('logGame',pseudo)
+        },
+        createPartieStore({
+            commit, state
+        },idserie){
+            api.get('parties/'+idserie);
+            commit('createPartieGame')
+        },
 
         created_data({
             commit,
