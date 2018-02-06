@@ -12,6 +12,14 @@ export default new Vuex.Store({
     },
     state: {
         Pseudo:"",
+        OSeries: {"series":[{
+            "id": "idNancy",
+            "ville": "Nancy"
+        },{
+            "id": "idParis",
+            "ville": "Paris"
+        }]
+        },
         question_actuel: 0, //donné en brut
         images: {},
         name: 'test'
@@ -21,6 +29,9 @@ export default new Vuex.Store({
     mutations: {
         logGame(state, pseudo){
             state.Pseudo= pseudo
+        },
+        createPartieGame(state, listepartie){
+            state.parties=listepartie
         }
     },
     actions: {
@@ -28,9 +39,12 @@ export default new Vuex.Store({
             commit, state
         },pseudo){
             commit('logGame',pseudo)
+        },
+        createPartieStore({
+            commit, state
+        },idserie){
+            api.get('parties/'+idserie);
+            commit('createPartieGame')
         }
-            
-            
-        
     }
 });
