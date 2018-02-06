@@ -1,16 +1,18 @@
 <template>
 
   <div class="play">
-        <div class="windows">
-            <p id='question'>question actuel : {{ question_actuel }} / 10</p>
+        <div class="windows" v-if="jeux_finit == 0">
+            <p id='question'>question actuel : {{ question_actuel }} / {{ question_total }}</p>
             <div class="image"><img v-bind:src=images_actuel></div>
             <div id="map">
                 <v-map :zoom=13 :center="[47.413220, -1.219482]">
                 <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-                <v-marker :lat-lng="[47, 0]"></v-marker>
                 </v-map>
             </div>
             <button type="button" class="btn" @click="next()">Question suivante</button>
+        </div>
+        <div class="windows" v-else>
+            <p>Jeux terminé</p>
         </div>
   </div>
 </template>
@@ -29,12 +31,11 @@
 
     Vue.component('v-map', Vue2Leaflet.Map);
     Vue.component('v-tilelayer', Vue2Leaflet.TileLayer);
-    Vue.component('v-marker', Vue2Leaflet.Marker);
 
     export default {
 
         computed: {
-            ...mapState(['question_actuel','images_actuel','serie_actuel','score_final','coordonné_actuel'])
+            ...mapState(['question_actuel','question_total','images_actuel','serie_actuel','score_final','jeux_finit'])
         },
 
         created() {
