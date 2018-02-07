@@ -19,16 +19,8 @@ export default new Vuex.Store({
     state: {
         jeux_finit: 0,
         question_total: 0,
-        Pseudo: "",
-        OSeries: {
-            "series": [{
-                "id": "idNancy",
-                "ville": "Nancy"
-        }, {
-                "id": "idParis",
-                "ville": "Paris"
-        }]
-        },
+        Pseudo:"",
+        OSeries: [],
         question_actuel: 0,
         images_actuel: 0,
         serie_actuel: 0,
@@ -89,17 +81,26 @@ export default new Vuex.Store({
     getters: {},
     mutations: {
 
-        initJeux(state) {
+        createQuestionnaire(state, listephotos){
+            for (var i = listephotos.length - 1; i >= 0; i--) {
+                //en cours, remplir les données pour play listephotos[i]
+            }
+        },
+        initJeux(state, total) {
             state.jeux_finit = 0
         },
         jeuxEnd(state) {
             state.jeux_finit = 1
         },
-
-        logGame(state, pseudo) {
-            state.Pseudo = pseudo
+          
+        logGame(state, pseudo){
+            state.Pseudo= pseudo
         },
 
+        getSerie(state, listeserie){
+            state.OSeries=listeserie
+        },
+  
         createPartieGame(state, listepartie) {
             state.parties = listepartie
         },
@@ -117,23 +118,45 @@ export default new Vuex.Store({
         changeScore(state, score) {
             state.score_actuel = state.score_actuel + score
         },
+
         changeCoor(state) {
             state.marker = L.latLng(state.jeux[state.question_actuel - 1].lat, state.jeux[state.question_actuel - 1].long)
+        },
+      
+
+        setDifficulty(state, difficulty){
+            state.Difficulty= difficulty
         }
     },
     actions: {
+        setDifficulty({commit, state}, difficulty){
+            commit('setDifficulty', difficulty)
+        },
+
         logStore({
-            commit,
-            state
-        }, pseudo) {
-            commit('logGame', pseudo)
+            commit, state
+        },pseudo){
+            api.get('series',{}).then(response=>{
+                commit('getSerie', response.data)
+            })
+            commit('logGame',pseudo)
         },
         createPartieStore({
-            commit,
-            state
-        }, idserie) {
-            api.get('parties/' + idserie);
-            commit('createPartieGame')
+            commit, state
+        },idserie){
+            api.get('parties/'+idserie,{params:{
+                joueur: state.Pseudo,
+                photo: state.Difficulty*10
+            }}).then(response=>{
+                commit('createPartieGame', response.data)    
+            })
+            api.get('serie/'+idserie,{
+                params:{
+
+                }
+            }).then(response=>{
+                commit('createQuestionnaire', response.data)
+            })
         },
 
         created_data({

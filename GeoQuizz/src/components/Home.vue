@@ -14,7 +14,17 @@
     <div v-else>
     <div v-for></div>
       <h2>Cliquez sur une série pour lancer la partie</h2>
-      <div v-for="serie in OSeries.series">
+      <label>Difficulté : </label>
+      {{Difficulty}}
+      <select ref="select">
+        <option v-if="Difficulty==1" value=1 selected="selected">Facile</option>
+        <option v-else value=1>Facile</option>
+        <option v-if="Difficulty==2" value=2 selected="selected">Intermédiaire</option>
+        <option v-else value=2>Intermédiaire</option>
+        <option v-if="Difficulty==3" value=3 selected="selected">Difficile</option>
+        <option v-else value=3>Difficile</option>
+      </select>
+      <div v-for="serie in OSeries">
         <a v-on:click="createPartie(serie.id)" href="#"><h1>{{serie.ville}}</h1></a>
       </div>
     </div>
@@ -22,17 +32,18 @@
 </template>
 
 <script>
+import router from '../router'  
 import api from '@/api'
-    import Vuex from 'vuex'
-    import {
-        mapActions
-    } from 'vuex'
-    import {
-        mapState
-    } from 'vuex'
+import Vuex from 'vuex'
+import {
+  mapActions
+} from 'vuex'
+import {
+  mapState
+} from 'vuex'
 export default {
   computed:{
-    ...mapState(['Pseudo', 'OSeries'])
+    ...mapState(['Pseudo', 'OSeries', 'Difficulty'])
   },
 
   name: 'Home',
@@ -48,9 +59,11 @@ export default {
     },
 
     createPartie(idserie){
-      this.$store.dispatch('createPartieStore', idserie);
+      this.$store.dispatch('setDifficulty', this.$refs.select.value),
+      this.$store.dispatch('createPartieStore', idserie)
+      this.$router.push({name: "Play"})
+      }
     }
-  }
 }
 </script>
 
