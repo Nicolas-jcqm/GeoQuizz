@@ -2,6 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import api from '@/api'
 import createPersistedState from 'vuex-persistedstate'
+import L from 'leaflet'
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+    iconUrl: require('leaflet/dist/images/marker-icon.png')
+})
 
 
 Vue.use(Vuex)
@@ -12,21 +19,21 @@ export default new Vuex.Store({
     state: {
         jeux_finit: 0,
         question_total: 0,
-        Pseudo:"",
-        OSeries: {"series":[{
-            "id": "idNancy",
-            "ville": "Nancy"
-        },{
-            "id": "idParis",
-            "ville": "Paris"
+        Pseudo: "",
+        OSeries: {
+            "series": [{
+                "id": "idNancy",
+                "ville": "Nancy"
+        }, {
+                "id": "idParis",
+                "ville": "Paris"
         }]
         },
         question_actuel: 0,
         images_actuel: 0,
         serie_actuel: 0,
         score_final: 0,
-        coordonne_actuel_lat: 0,
-        coordonne_actuel_long: 0,
+        marker: 0,
         jeux: [{
                 "lat": 13,
                 "long": 49,
@@ -82,21 +89,21 @@ export default new Vuex.Store({
     getters: {},
     mutations: {
 
-        initJeux(state, total) {
+        initJeux(state) {
             state.jeux_finit = 0
         },
         jeuxEnd(state) {
             state.jeux_finit = 1
         },
 
-        logGame(state, pseudo){
-            state.Pseudo= pseudo
+        logGame(state, pseudo) {
+            state.Pseudo = pseudo
         },
 
-        createPartieGame(state, listepartie){
-            state.parties=listepartie
+        createPartieGame(state, listepartie) {
+            state.parties = listepartie
         },
-  
+
         initQuestion(state, total) {
             state.question_actuel = 1
             state.question_total = total
@@ -110,23 +117,22 @@ export default new Vuex.Store({
         changeScore(state, score) {
             state.score_actuel = state.score_actuel + score
         },
-        changeCoorLong(state, coor_lat) {
-            state.coordonne_actuel_lat = state.jeux[state.question_actuel - 1].long;
-        },
-        changeCoorLat(state, coor_long) {
-            state.coordonne_actuel_long = state.jeux[state.question_actuel - 1].lat;
+        changeCoor(state) {
+            state.marker = L.latLng(state.jeux[state.question_actuel - 1].lat, state.jeux[state.question_actuel - 1].long)
         }
     },
     actions: {
         logStore({
-            commit, state
-        },pseudo){
-            commit('logGame',pseudo)
+            commit,
+            state
+        }, pseudo) {
+            commit('logGame', pseudo)
         },
         createPartieStore({
-            commit, state
-        },idserie){
-            api.get('parties/'+idserie);
+            commit,
+            state
+        }, idserie) {
+            api.get('parties/' + idserie);
             commit('createPartieGame')
         },
 
@@ -134,6 +140,7 @@ export default new Vuex.Store({
             commit,
             state
         }) {
+            commit('initJeux')
             console.log("Itinialisation des donnes")
             console.log(state)
             //initialisé la question
@@ -141,8 +148,7 @@ export default new Vuex.Store({
             //initialisé l'images
             commit('changeImage')
             //initialisé les coordonnées
-            commit('changeCoorLong', 30)
-            commit('changeCoorLat', 20)
+            commit('changeCoor')
 
         },
 
@@ -160,10 +166,8 @@ export default new Vuex.Store({
                 commit('nextQuestion')
                 //change l'image
                 commit('changeImage')
-                console.log(state.question_actuel)
-                console.log(state.question_total)
-                console.log(state.jeux_finit)
-                //actualisé les coordonnées du prochain point   
+                //actualisé les coordonnées du prochain point 
+                commit('changeCoor')
             }
 
         }
