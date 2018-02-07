@@ -4,7 +4,7 @@
         <div class="windows" v-if="jeux_finit == 0">
             <p id='question'>question actuel : {{ question_actuel }} / {{ question_total }}</p>
             <p id='question'>Score actuel : {{ score_final }}</p>
-            <div class="image"><img v-bind:src=images_actuel></div>
+            <div class="image"><img v-bind:src="images_actuel"></div>
             <div id="map">
             <v-map @l-click="onclick($event)":zoom="zoom" :center="center">
                 <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
@@ -31,6 +31,14 @@
     import {
         mapState
     } from 'vuex'
+
+    import L from 'leaflet'
+
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+        iconUrl: require('leaflet/dist/images/marker-icon.png')
+    })
 
 
     Vue.component('v-map', Vue2Leaflet.Map)
@@ -77,12 +85,20 @@
 
             next() {
                 console.log("next_question")
-
-                //calculer la distance entre marqueur et les coordonnées
-                let distance_calcule = this.distance(this.marker.lat, this.markers[0].lat, this.marker.lng, this.markers[0].lng)
-                console.log(distance_calcule)
-                //dispatch
-                this.$store.dispatch('next_question', distance_calcule)
+                if (this.markers.length == 0) {
+                    let conf = confirm("Voulez vous passer cette question!");
+                    if(!conf){
+                        //on fait rien
+                    }else{
+                        this.$store.dispatch('next_question', 0)
+                    }
+                } else {
+                    //calculer la distance entre marqueur et les coordonnées
+                    let distance_calcule = this.distance(this.marker.lat, this.markers[0].lat, this.marker.lng, this.markers[0].lng)
+                    console.log(distance_calcule)
+                    //dispatch
+                    this.$store.dispatch('next_question', distance_calcule)
+                }
                 //reset le markeur
                 this.markers = []
 
