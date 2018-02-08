@@ -2,8 +2,12 @@
 
   <div class="play">
         <div class="windows" v-if="jeux_finit == 0">
-            <p id='question'>question actuel : {{ question_actuel }} / {{ question_total }}</p>
-            <p id='question'>Score actuel : {{ score_final }}</p>
+            <div class='info'>
+                <div id='info_unique'>question actuel : {{ question_actuel }} / {{ question_total }}</div>
+                <div id='info_unique'>Score actuel : {{ score_final }}</div>
+                <div id='timer'>Timer : {{ affichage_inter }}</div>
+                <div class="progress-bar blue"></div>
+            </div>
             <div class="image"><img v-bind:src="images_actuel"></div>
             <div id="map">
             <div id="app" style="height: 100%">
@@ -16,6 +20,7 @@
         </div>
         <div class="windows" v-else>
             <p>Jeux terminé</p>
+            <button type="button" class="btn" @click="retour()">Retourner au menu</button>
         </div>
   </div>
 </template>
@@ -48,7 +53,7 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel','OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'marker'])
+            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'marker'])
         },
 
         data() {
@@ -56,17 +61,18 @@
                 zoom: 13,
                 url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                markers: []
+                markers: [],
+                affichage_inter: 5,
+                inter: 0,
+                id_timer: 0
             }
         },
 
-        
+
         created() {
             //dispatch
-            //console.log('yolocen')
-            //console.log(this.serie)
             this.$store.dispatch('created_data')
-            //this.center=[this.serie.map_latitude, this.serie.map_longitude]
+            this.interval()
         },
         methods: {
 
@@ -82,16 +88,16 @@
                     latlng: event.latlng,
                     content: 'Ma réponse'
                 })
-                
+
             },
 
             next() {
                 console.log("next_question")
                 if (this.markers.length == 0) {
                     let conf = confirm("Voulez vous passer cette question!");
-                    if(!conf){
+                    if (!conf) {
                         //on fait rien
-                    }else{
+                    } else {
                         this.$store.dispatch('next_question', 0)
                     }
                 } else {
@@ -107,7 +113,7 @@
             },
 
             distance(lat1, lat2, lon1, lon2) {
-                console.log("la1 : "+lat1+"la2 : "+lat2+"lo1 : "+lon1+"lo2 : "+lon2)
+                console.log("la1 : " + lat1 + "la2 : " + lat2 + "lo1 : " + lon1 + "lo2 : " + lon2)
                 let R = 6371000; // meter
                 let Phi1 = lat1 * Math.PI / 180;
                 let Phi2 = lat2 * Math.PI / 180;
@@ -121,8 +127,37 @@
                 let d = R * c;
 
                 return d;
-            }
+            },
 
+            interval() {
+                this.id_timer = setInterval(() => {
+                    this.inter++
+                        this.affichage_inter--
+                        this.testEnd()
+                }, 1000);
+            },
+
+            testEnd() {
+                if (this.inter === 5) {
+                    if (this.question_actuel > this.question_total) {
+                        this.inter = 0
+                        this.affichage_inter = 5
+
+                        window.clearInterval(this.id_timer)
+                    } else {
+                        this.inter = 0
+                        this.affichage_inter = 5
+                        this.$store.dispatch('next_question', 0)
+                    }
+                }
+
+            },
+
+            retour() {
+                this.$router.push({
+                    path: '/'
+                })
+            }
 
         }
 
@@ -141,8 +176,8 @@
     }
 
     .image {
-        width: 500px;
-        height: 500px;
+        max-width: 500px;
+        max-height: 500px;
         margin: auto;
     }
 
@@ -152,13 +187,27 @@
         justify-content: center;
     }
 
-    #question {
-        width: 100%;
+    #info_unique {
+        flex-basis: 30%;
+        flex-grow: 1;
+    }
+
+    #timer {
+        width: 100%
     }
 
     .btn {
         margin-top: 50px;
         width: 80%;
     }
+
+    .info {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    
 
 </style>
