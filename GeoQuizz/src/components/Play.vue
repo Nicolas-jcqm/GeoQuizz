@@ -7,12 +7,14 @@
                 <div id='info_unique'>Score actuel : {{ score_final }}</div>
                 <div id='timer'>Timer : {{ affichage_inter }}</div>
             </div>
-            <div class="image"><img v-bind:src="images_actuel"></div>
+            <div class="image"><img v-bind:src="jeux[question_actuel-1].url"></div>
             <div id="map">
-                <div id="app" style="height: 100%">
-                <v-map :zoom=13 :center='center'>
-                    <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-                </v-map>
+            <div id="app" style="height: 100%">
+            <v-map @l-click="onclick($event)" :zoom=13 :center='center'>
+                <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
+                <v-marker :lat-lng="marker"></v-marker>
+                <v-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng" @l-add="$event.target.openPopup()"></v-marker>
+            </v-map>
             </div>
             </div>
             <button type="button" class="btn btn-3" @click="next()">Question suivante</button>
@@ -52,7 +54,7 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'marker'])
+            ...mapState(['question_actuel','OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'serie','jeux', 'marker'])
         },
 
         data() {
@@ -76,8 +78,6 @@
         methods: {
 
             onclick(event) {
-                console.log(event)
-
                 if (this.markers.length >= 1) {
                     this.markers = []
                 }
@@ -87,11 +87,11 @@
                     latlng: event.latlng,
                     content: 'Ma réponse'
                 })
-
             },
 
             next() {
-                console.log("next_question")
+                //console.log("hello")
+                //console.log(this.serie)
                 if (this.markers.length == 0) {
                     let conf = confirm("Voulez vous passer cette question!");
                     if (!conf) {
@@ -101,8 +101,9 @@
                     }
                 } else {
                     //calculer la distance entre marqueur et les coordonnées
-                    let distance_calcule = this.distance(this.marker.lat, this.markers[0].lat, this.marker.lng, this.markers[0].lng)
-                    console.log(distance_calcule)
+                    //console.log(this.markers[0].latlng.lat)
+                    let distance_calcule = this.distance(this.jeux[this.question_actuel].latitude, this.markers[0].latlng.lat, this.jeux[this.question_actuel].longitude, this.markers[0].latlng.lng)
+                    //console.log(distance_calcule)
                     //dispatch
                     this.$store.dispatch('next_question', distance_calcule)
                 }
@@ -112,19 +113,12 @@
             },
 
             distance(lat1, lat2, lon1, lon2) {
-                console.log("la1 : " + lat1 + "la2 : " + lat2 + "lo1 : " + lon1 + "lo2 : " + lon2)
-                let R = 6371000; // meter
-                let Phi1 = lat1 * Math.PI / 180;
-                let Phi2 = lat2 * Math.PI / 180;
-                let DeltaPhi = (lat2 - lat1) * Math.PI / 180;
-                let DeltaLambda = (lon2 - lon1) * Math.PI / 180;
-
-                let a = Math.sin(DeltaPhi / 2) * Math.sin(DeltaPhi / 2) +
-                    Math.cos(Phi1) * Math.cos(Phi2) * Math.sin(DeltaLambda / 2) *
-                    Math.sin(DeltaLambda / 2);
-                let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                let d = R * c;
-
+                var R = 6378000; //Rayon de la terre en mètre
+                var lat_a = (Math.PI * lat1)/180;
+                var lon_a = (Math.PI * lon2)/180;
+                var lat_b = (Math.PI * lat2)/180;
+                var lon_b = (Math.PI * lon2)/180; 
+                var d = R * (Math.PI/2 - Math.asin( Math.sin(lat_b) * Math.sin(lat_a) + Math.cos(lon_b - lon_a) * Math.cos(lat_b) * Math.cos(lat_a)))
                 return d;
             },
 
