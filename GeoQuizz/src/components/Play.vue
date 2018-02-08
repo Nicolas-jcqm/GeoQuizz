@@ -2,20 +2,24 @@
 
   <div class="play">
         <div class="windows" v-if="jeux_finit == 0">
-            <p id='question'>question actuel : {{ question_actuel }} / {{ question_total }}</p>
-            <p id='question'>Score actuel : {{ score_final }}</p>
+            <div class='info'>
+                <div id='info_unique'>question actuel : {{ question_actuel }} / {{ question_total }}</div>
+                <div id='info_unique'>Score actuel : {{ score_final }}</div>
+                <div id='timer'>Timer : {{ affichage_inter }}</div>
+            </div>
             <div class="image"><img v-bind:src="images_actuel"></div>
             <div id="map">
-            <div id="app" style="height: 100%">
-            <v-map :zoom=13 :center='center'>
-                <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-            </v-map>
-</div>
+                <div id="app" style="height: 100%">
+                <v-map :zoom=13 :center='center'>
+                    <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
+                </v-map>
             </div>
-            <button type="button" class="btn" @click="next()">Question suivante</button>
+            </div>
+            <button type="button" class="btn btn-3" @click="next()">Question suivante</button>
         </div>
         <div class="windows" v-else>
-            <p>Jeux terminé</p>
+            <div class="jeux">Jeux terminé</div>
+            <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
         </div>
   </div>
 </template>
@@ -48,7 +52,7 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel','OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'marker'])
+            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'marker'])
         },
 
         data() {
@@ -56,17 +60,18 @@
                 zoom: 13,
                 url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                markers: []
+                markers: [],
+                affichage_inter: 5,
+                inter: 0,
+                id_timer: 0
             }
         },
 
-        
+
         created() {
             //dispatch
-            //console.log('yolocen')
-            //console.log(this.serie)
             this.$store.dispatch('created_data')
-            //this.center=[this.serie.map_latitude, this.serie.map_longitude]
+            this.interval()
         },
         methods: {
 
@@ -82,16 +87,16 @@
                     latlng: event.latlng,
                     content: 'Ma réponse'
                 })
-                
+
             },
 
             next() {
                 console.log("next_question")
                 if (this.markers.length == 0) {
                     let conf = confirm("Voulez vous passer cette question!");
-                    if(!conf){
+                    if (!conf) {
                         //on fait rien
-                    }else{
+                    } else {
                         this.$store.dispatch('next_question', 0)
                     }
                 } else {
@@ -107,7 +112,7 @@
             },
 
             distance(lat1, lat2, lon1, lon2) {
-                console.log("la1 : "+lat1+"la2 : "+lat2+"lo1 : "+lon1+"lo2 : "+lon2)
+                console.log("la1 : " + lat1 + "la2 : " + lat2 + "lo1 : " + lon1 + "lo2 : " + lon2)
                 let R = 6371000; // meter
                 let Phi1 = lat1 * Math.PI / 180;
                 let Phi2 = lat2 * Math.PI / 180;
@@ -121,8 +126,37 @@
                 let d = R * c;
 
                 return d;
-            }
+            },
 
+            interval() {
+                this.id_timer = setInterval(() => {
+                    this.inter++
+                        this.affichage_inter--
+                        this.testEnd()
+                }, 1000);
+            },
+
+            testEnd() {
+                if (this.inter === 5) {
+                    if (this.question_actuel > this.question_total) {
+                        this.inter = 0
+                        this.affichage_inter = 5
+
+                        window.clearInterval(this.id_timer)
+                    } else {
+                        this.inter = 0
+                        this.affichage_inter = 5
+                        this.$store.dispatch('next_question', 0)
+                    }
+                }
+
+            },
+
+            retour() {
+                this.$router.push({
+                    path: '/'
+                })
+            }
 
         }
 
@@ -136,13 +170,13 @@
 
     #map {
         width: 500px;
-        height: 500px;
+        max-height: 500px;
         margin: auto;
     }
 
     .image {
-        width: 500px;
-        height: 500px;
+        max-width: 500px;
+        max-height: 500px;
         margin: auto;
     }
 
@@ -152,13 +186,164 @@
         justify-content: center;
     }
 
-    #question {
-        width: 100%;
+    #info_unique {
+        flex-basis: 30%;
+        flex-grow: 1;
+    }
+
+    #timer {
+        width: 100%
     }
 
     .btn {
         margin-top: 50px;
         width: 80%;
+    }
+    
+    .jeux{
+        height: 300%;
+        width: 100%;
+        margin: auto;
+        vertical-align: middle;
+    }
+
+    .info {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        background: #efefef;
+        color: #121221;
+        font: 700 14px Montserrat, sans-serif;
+        letter-spacing: 0.125em;
+        text-align: center;
+        text-transform: uppercase;
+    }
+
+    h1 {
+        margin: 3em 0 2em;
+    }
+
+    .btn {
+        background: none;
+        border: 2px solid;
+        border-bottom-width: 4px;
+        font: inherit;
+        letter-spacing: inherit;
+        margin: 1em;
+        padding: 1em 2em;
+        text-transform: inherit;
+        transition: color 1s;
+    }
+
+    .btn-1 {
+        color: #9c89f7;
+    }
+
+    .btn-1:hover {
+        animation: halftone 1s forwards;
+        background: radial-gradient(circle, #9c89f7 0.2em, transparent 0.25em) 0 0 / 1.25em 1.25em, radial-gradient(circle, #9c89f7 0.2em, transparent 0.25em) 6.25em 6.25em / 1.25em 1.25em;
+        color: #e4f789;
+    }
+
+    @keyframes halftone {
+        100% {
+            background-size: 2.375em 2.375em, 0.1em 0.1em;
+        }
+    }
+
+    .btn-2 {
+        color: #82f6d8;
+    }
+
+    .btn-2:hover {
+        animation: stripes-move 0.75s infinite linear;
+        background: repeating-linear-gradient(45deg, #82f6d8 0, #82f6d8 0.25em, transparent 0.25em, transparent 0.5em);
+        color: #f682a0;
+    }
+
+    @keyframes stripes-move {
+        100% {
+            background-position: 5em 0px;
+        }
+    }
+
+    .btn-3 {
+        color: #d3f169;
+    }
+
+    .btn-3:hover {
+        animation: sawtooth 0.35s infinite linear;
+        background: linear-gradient(45deg, #d3f169 0.5em, transparent 0.5em) 0 0 / 1em 1em, linear-gradient(-45deg, #d3f169 0.5em, transparent 0.5em) 0 0 / 1em 1em;
+        color: #8769f1;
+    }
+
+    @keyframes sawtooth {
+        100% {
+            background-position: 1em 0;
+        }
+    }
+
+    .btn-4 {
+        color: #eea163;
+    }
+
+    .btn-4:hover {
+        animation: zigzag 1s linear infinite;
+        background: linear-gradient(135deg, rgba(238, 161, 99, 0.25) 0.25em, transparent 0.25em) -0.5em 0, linear-gradient(225deg, rgba(238, 161, 99, 0.25) 0.25em, transparent 0.25em) -0.5em 0, linear-gradient(315deg, rgba(238, 161, 99, 0.25) 0.25em, transparent 0.25em) 0 0, linear-gradient(45deg, rgba(238, 161, 99, 0.25) 0.25em, transparent 0.25em) 0 0;
+        background-size: 0.75em 0.75em;
+        color: #63b0ee;
+    }
+
+    @keyframes zigzag {
+        100% {
+            background-position: 1em 0, 1em 0, -0.75em 0, -0.75em 0;
+        }
+    }
+
+    .btn-5 {
+        color: #7cf07f;
+    }
+
+    .btn-5:hover {
+        animation: blinds 0.75s linear forwards;
+        background: linear-gradient(0deg, #7cf07f 25%, transparent 25%) 0 0 / 0.5em 0.5em, linear-gradient(0deg, #88d6f3 50%, transparent 50%) 0 0 / 1em 1em;
+        color: #f07ced;
+    }
+
+    @keyframes blinds {
+        100% {
+            background-position: 0 0, 0 -3em;
+            background-size: 0 0, 1em 6em;
+        }
+    }
+
+    .btn-6 {
+        color: #f9879b;
+    }
+
+    .btn-6:hover {
+        animation: pulse 1s ease-in infinite;
+        background: radial-gradient(circle, rgba(249, 135, 155, 0.25) 43%, transparent 50%) 0 0 / 1em 1em, radial-gradient(circle, rgba(249, 135, 155, 0.25) 43%, transparent 50%) 0.5em 0.5em / 2em 2em;
+        color: #0bdcb7;
+    }
+
+    @keyframes pulse {
+        50% {
+            background-position: 0.66em 0.66em, -0.33em -0.33em;
+        }
+        100% {
+            background-size: 2em 2em, 1em 1em;
+            background-position: -1.5em -1.5em, -1em -1em;
+        }
     }
 
 </style>
