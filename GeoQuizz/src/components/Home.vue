@@ -25,7 +25,7 @@
         <option v-else value=3>Difficile</option>
       </select>
       <div v-for="serie in OSeries">
-        <a v-on:click="createPartie(serie.id)" href="#"><h1>{{serie.ville}}</h1></a>
+        <a v-on:click="createPartie(serie.id)"><h1>{{serie.ville}}</h1></a>
       </div>
     </div>
   </div>
