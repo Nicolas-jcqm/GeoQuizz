@@ -24,7 +24,7 @@
         <option v-if="Difficulty==3" value=3 selected="selected">Difficile</option>
         <option v-else value=3>Difficile</option>
       </select>
-      <div v-for="serie in OSeries">
+      <div v-for="serie in OSeries.series">
         <a v-on:click="createPartie(serie.id)"><h1>{{serie.ville}}</h1></a>
       </div>
     </div>
