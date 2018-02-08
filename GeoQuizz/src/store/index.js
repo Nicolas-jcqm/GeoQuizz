@@ -24,81 +24,82 @@ export default new Vuex.Store({
         question_actuel: 0,
         images_actuel: 0,
         center: L.latLng(48.66686499999999, 6.134240999999999),
-        serie: {"series": [
-        {
-            "id": "1",
-            "ville": "Nancy",
-            "nom": "serie1",
-            "latitude": 48.6880796,
-            "longitude": 6.1559274,
-            "distance": 500,
-            "zoom": 10
+        serie: {
+            "series": [
+                {
+                    "id": "1",
+                    "ville": "Nancy",
+                    "nom": "serie1",
+                    "latitude": 48.6880796,
+                    "longitude": 6.1559274,
+                    "distance": 500,
+                    "zoom": 10
         }
-    ]},
+    ]
+        },
         score_actuel: 0,
-        score_final: 0,
         Difficulty: 1,
         marker: 0,
         jeux: [
-        {
-            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nancy_-_palais_ducal%2C_façade_%282%29.jpg/280px-Nancy_-_palais_ducal%2C_façade_%282%29.jpg",
-            "latitude": 48.697322,
-            "longitude": 6.179293,
-            "description": "Palais des Ducs de Lorraine"
+            {
+                "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Nancy_-_palais_ducal%2C_façade_%282%29.jpg/280px-Nancy_-_palais_ducal%2C_façade_%282%29.jpg",
+                "latitude": 48.697322,
+                "longitude": 6.179293,
+                "description": "Palais des Ducs de Lorraine"
         },
-        {
-            "url": "Nancy/stadeMarcelPicot.jpg",
-            "latitude": 48.695675,
-            "longitude": 6.210751,
-            "description": "Stade Marcel Picot"
+            {
+                "url": "Nancy/stadeMarcelPicot.jpg",
+                "latitude": 48.695675,
+                "longitude": 6.210751,
+                "description": "Stade Marcel Picot"
         },
-        {
-            "url": "Nancy/jardinBotaniqueJMPelt.jpg",
-            "latitude": 48.661103,
-            "longitude": 6.155104,
-            "description": "Jardin Botanique Jean-Marie Pelt"
+            {
+                "url": "Nancy/jardinBotaniqueJMPelt.jpg",
+                "latitude": 48.661103,
+                "longitude": 6.155104,
+                "description": "Jardin Botanique Jean-Marie Pelt"
         },
-        {
-            "url": "Nancy/saintSebastien.jpg",
-            "latitude": 48.688876,
-            "longitude": 6.181254,
-            "description": "Centre Commercial Saint Sebeastien"
+            {
+                "url": "Nancy/saintSebastien.jpg",
+                "latitude": 48.688876,
+                "longitude": 6.181254,
+                "description": "Centre Commercial Saint Sebeastien"
         },
-        {
-            "url": "Nancy/parcSainteMarie.jpg",
-            "latitude": 48.680357,
-            "longitude": 6.170744,
-            "description": "Parc Sainte Marie"
+            {
+                "url": "Nancy/parcSainteMarie.jpg",
+                "latitude": 48.680357,
+                "longitude": 6.170744,
+                "description": "Parc Sainte Marie"
         },
-        {
-            "url": "Nancy/porteDeLaCraffe.jpg",
-            "latitude": 48.699058,
-            "longitude": 6.177817,
-            "description": "Porte de la Craffe"
+            {
+                "url": "Nancy/porteDeLaCraffe.jpg",
+                "latitude": 48.699058,
+                "longitude": 6.177817,
+                "description": "Porte de la Craffe"
         },
-        {
-            "url": "Nancy/placeCarriere.jpg",
-            "latitude": 48.695714,
-            "longitude": 6.182259,
-            "description": "Place Carriere"
+            {
+                "url": "Nancy/placeCarriere.jpg",
+                "latitude": 48.695714,
+                "longitude": 6.182259,
+                "description": "Place Carriere"
         },
-        {
-            "url": "Nancy/museeBeauxArts.jpg",
-            "latitude": 48.69363,
-            "longitude": 6.182112,
-            "description": "Musee des Beaux-Arts"
+            {
+                "url": "Nancy/museeBeauxArts.jpg",
+                "latitude": 48.69363,
+                "longitude": 6.182112,
+                "description": "Musee des Beaux-Arts"
         },
-        {
-            "url": "Nancy/placeStanislas.jpg",
-            "latitude": 48.693611,
-            "longitude": 6.183156,
-            "description": "Place Stanislas"
+            {
+                "url": "Nancy/placeStanislas.jpg",
+                "latitude": 48.693611,
+                "longitude": 6.183156,
+                "description": "Place Stanislas"
         },
-        {
-            "url": "Nancy/cathedraleNancy.jpg",
-            "latitude": 48.691525,
-            "longitude": 6.186118,
-            "description": "Cathédrale de Nancy"
+            {
+                "url": "Nancy/cathedraleNancy.jpg",
+                "latitude": 48.691525,
+                "longitude": 6.186118,
+                "description": "Cathédrale de Nancy"
         }]
     },
 
@@ -114,8 +115,8 @@ export default new Vuex.Store({
             }
         },
 
-        setCurrentSerie(state, objserie){
-            state.center= L.latLng(objserie.map_latitude, objserie.map_longitude);
+        setCurrentSerie(state, objserie) {
+            state.center = L.latLng(objserie.map_latitude, objserie.map_longitude);
 
         },
 
@@ -152,16 +153,18 @@ export default new Vuex.Store({
             state.images_actuel = state.jeux[state.question_actuel - 1].image
         },
         calculScore(state, distance_calcule) {
-            if(state.serie.series[0].distance/state.Difficulty>distance_calcule){
-                state.score_actuel = state.score_actuel + 100
-            }
-            else{
-                if((state.serie.series[0].distance/state.Difficulty)*2>distance_calcule){
-                    state.score_actuel = state.score_actuel + 50
-                }
-                else{
-                    if((state.serie.series[0].distance/state.Difficulty)*4>distance_calcule){
-                        state.score_actuel = state.score_actuel + 25
+            if (distance_calcule === 0) {
+                state.score_actuel = state.score_actuel + 1
+            } else {
+                if (state.serie.series[0].distance / state.Difficulty > distance_calcule) {
+                    state.score_actuel = state.score_actuel + 100
+                } else {
+                    if ((state.serie.series[0].distance / state.Difficulty) * 2 > distance_calcule) {
+                        state.score_actuel = state.score_actuel + 50
+                    } else {
+                        if ((state.serie.series[0].distance / state.Difficulty) * 4 > distance_calcule) {
+                            state.score_actuel = state.score_actuel + 25
+                        }
                     }
                 }
             }
@@ -169,14 +172,28 @@ export default new Vuex.Store({
 
         changeCoor(state) {
             state.marker = {
-                lat:47.413220,
-                lng:-1.219482
+                lat: 47.413220,
+                lng: -1.219482
             }
         },
 
 
         setDifficulty(state, difficulty) {
             state.Difficulty = difficulty
+        },
+
+        reset(state) {
+
+            state.jeux_finit = 0
+            state.question_total = 0
+            state.Pseudo = ""
+            state.OSeries = []
+            state.question_actuel = 0
+            state.images_actuel = 0
+            state.center = L.latLng(48.66686499999999, 6.134240999999999)
+            state.score_actuel = 0
+            state.marker = 0
+
         }
     },
     actions: {
@@ -203,17 +220,17 @@ export default new Vuex.Store({
             api.get('series/' + idserie, {}).then(response => {
                 commit('setCurrentSerie', response.data)
             })
-          api.post('parties/',{
-            params:{
-                serie: idserie,
-                joueur: state.Pseudo,
-                photo: state.Difficulty*10
-            },
-            headers:{
-                'Content-Type': 'application/json'
-            }
+            api.post('parties/', {
+                params: {
+                    serie: idserie,
+                    joueur: state.Pseudo,
+                    photo: state.Difficulty * 10
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
 
-        }).then(response=>{
+            }).then(response => {
                 commit('createPartieGame', response.data)
             })
             /*
@@ -240,6 +257,13 @@ export default new Vuex.Store({
 
         },
 
+        reset_state({
+            commit,
+            state
+        }) {
+            commit('reset')
+        },
+
         next_question({
             commit,
             state
@@ -250,7 +274,7 @@ export default new Vuex.Store({
                 commit('jeuxEnd')
             } else {
                 //calcul le score
-                commit('calculScore',distance_calcule)
+                commit('calculScore', distance_calcule)
                 //passé a la question suivante
                 commit('nextQuestion')
                 //change l'image
