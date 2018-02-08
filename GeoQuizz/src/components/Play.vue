@@ -4,7 +4,7 @@
         <div class="windows" v-if="jeux_finit == 0">
             <div class='info'>
                 <div id='info_unique'>question actuel : {{ question_actuel }} / {{ question_total }}</div>
-                <div id='info_unique'>Score actuel : {{ score_final }}</div>
+                <div id='info_unique'>Score actuel : {{ score_actuel }}</div>
                 <div id='timer'>Timer : {{ affichage_inter }}</div>
             </div>
             <div class="image"><img v-bind:src="jeux[question_actuel-1].url"></div>
@@ -17,7 +17,7 @@
             </v-map>
             </div>
             </div>
-            <button type="button" class="btn btn-3" @click="next()">Question suivante</button>
+            <button type="button" class="btn btn-rep btn-3" @click="next()">Question suivante</button>
         </div>
         <div class="windows" v-else>
             <div class="jeux">Jeux terminé</div>
@@ -54,7 +54,7 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel','OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'serie','jeux', 'marker'])
+            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_actuel', 'jeux_finit', 'serie', 'jeux', 'marker'])
         },
 
         data() {
@@ -114,11 +114,11 @@
 
             distance(lat1, lat2, lon1, lon2) {
                 var R = 6378000; //Rayon de la terre en mètre
-                var lat_a = (Math.PI * lat1)/180;
-                var lon_a = (Math.PI * lon2)/180;
-                var lat_b = (Math.PI * lat2)/180;
-                var lon_b = (Math.PI * lon2)/180; 
-                var d = R * (Math.PI/2 - Math.asin( Math.sin(lat_b) * Math.sin(lat_a) + Math.cos(lon_b - lon_a) * Math.cos(lat_b) * Math.cos(lat_a)))
+                var lat_a = (Math.PI * lat1) / 180;
+                var lon_a = (Math.PI * lon2) / 180;
+                var lat_b = (Math.PI * lat2) / 180;
+                var lon_b = (Math.PI * lon2) / 180;
+                var d = R * (Math.PI / 2 - Math.asin(Math.sin(lat_b) * Math.sin(lat_a) + Math.cos(lon_b - lon_a) * Math.cos(lat_b) * Math.cos(lat_a)))
                 return d;
             },
 
@@ -147,6 +147,7 @@
             },
 
             retour() {
+                this.$store.dispatch('reset_state')
                 this.$router.push({
                     path: '/'
                 })
@@ -164,7 +165,7 @@
 
     #map {
         width: 500px;
-        max-height: 500px;
+        height: 500px;
         margin: auto;
     }
 
@@ -193,8 +194,8 @@
         margin-top: 50px;
         width: 80%;
     }
-    
-    .jeux{
+
+    .jeux {
         height: 300%;
         width: 100%;
         margin: auto;
@@ -322,6 +323,10 @@
 
     .btn-6 {
         color: #f9879b;
+    }
+
+    .btn-rep {
+        margin-top: 200px;
     }
 
     .btn-6:hover {

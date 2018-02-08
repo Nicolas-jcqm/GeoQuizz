@@ -4,11 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
-import 'vue-progress-path/dist/vue-progress-path.css'
-import VueProgress from 'vue-progress-path'
-
-Vue.use(VueProgress, {
-})
 
 Vue.config.productionTip = false
 
