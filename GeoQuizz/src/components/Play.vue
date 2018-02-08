@@ -4,13 +4,13 @@
         <div class="windows" v-if="jeux_finit == 0">
             <p id='question'>question actuel : {{ question_actuel }} / {{ question_total }}</p>
             <p id='question'>Score actuel : {{ score_final }}</p>
-            <div class="image"><img v-bind:src=images_actuel></div>
+            <div class="image"><img v-bind:src="images_actuel"></div>
             <div id="map">
-            <v-map @l-click="onclick($event)":zoom="zoom" :center="center">
-                <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
-                <v-marker :lat-lng="marker"></v-marker>
-                <v-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng" @l-add="$event.target.openPopup()"></v-marker>
+            <div id="app" style="height: 100%">
+            <v-map :zoom=13 :center='center'>
+                <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
             </v-map>
+</div>
             </div>
             <button type="button" class="btn" @click="next()">Question suivante</button>
         </div>
@@ -40,23 +40,25 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel', 'question_total', 'images_actuel', 'serie_actuel', 'score_final', 'jeux_finit', 'marker'])
+            ...mapState(['question_actuel','OSeries', 'question_total', 'images_actuel', 'center', 'score_final', 'jeux_finit', 'marker'])
         },
 
         data() {
             return {
                 zoom: 13,
-                center: [47.413220, -1.219482],
                 url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 markers: []
             }
         },
 
-
+        
         created() {
             //dispatch
+            //console.log('yolocen')
+            //console.log(this.serie)
             this.$store.dispatch('created_data')
+            //this.center=[this.serie.map_latitude, this.serie.map_longitude]
         },
         methods: {
 
@@ -72,23 +74,24 @@
                     latlng: event.latlng,
                     content: 'Ma réponse'
                 })
-                console.log(this.markers)
+                
             },
 
             next() {
                 console.log("next_question")
-
+                console.log(this.markers)
                 //calculer la distance entre marqueur et les coordonnées
-                let distance_calcule = this.distance(this.marker.lat, this.markers[0].lat, this.marker.lng, this.markers[0].lng)
+                let distance_calcule = this.distance(this.marker.lat, this.markers[0].latlng.lat, this.marker.lng, this.markers[0].latlng.lng)
                 console.log(distance_calcule)
                 //dispatch
-                this.$store.dispatch('next_question', distance_calcule)
+                this.$store.dispatch('next_question', distance_calcule, note)
                 //reset le markeur
                 this.markers = []
 
             },
 
             distance(lat1, lat2, lon1, lon2) {
+                console.log("la1 : "+lat1+"la2 : "+lat2+"lo1 : "+lon1+"lo2 : "+lon2)
                 let R = 6371000; // meter
                 let Phi1 = lat1 * Math.PI / 180;
                 let Phi2 = lat2 * Math.PI / 180;
@@ -103,6 +106,7 @@
 
                 return d;
             }
+
 
         }
 

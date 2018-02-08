@@ -23,12 +23,14 @@ export default new Vuex.Store({
         OSeries: [],
         question_actuel: 0,
         images_actuel: 0,
-        serie_actuel: 0,
+        center: 0,
+        serie: 0,
         score_final: 0,
+        Difficulty:1,
         marker: 0,
         jeux: [{
-                "lat": 13,
-                "long": 49,
+                "lat": 48.6914558,
+                "long": 6.1805204,
                 image: "http://via.placeholder.com/350x200"
             },
             {
@@ -83,10 +85,21 @@ export default new Vuex.Store({
 
         createQuestionnaire(state, listephotos){
             for (var i = listephotos.length - 1; i >= 0; i--) {
+                state.jeux[i].lat=listephotos[i].lattitude;
+                state.jeux[i].long=listephotos[i].longitude;
+                state.jeux[i].image=listephotos[i].image;
                 //en cours, remplir les données pour play listephotos[i]
             }
         },
-        initJeux(state, total) {
+        setCurrentSerie(state, objserie){
+            /*console.log("aaaaaaaaaaa")
+            console.log(objserie.map_latitude)
+            state.serie=objserie*/
+            state.serie=objserie;
+            state.center= [objserie.map_latitude, objserie.map_longitude];
+        },
+
+        initJeux(state) {
             state.jeux_finit = 0
         },
         jeuxEnd(state) {
@@ -97,30 +110,34 @@ export default new Vuex.Store({
             state.Pseudo= pseudo
         },
 
-        getSerie(state, listeserie){
+        getSeries(state, listeserie){
             state.OSeries=listeserie
         },
   
         createPartieGame(state, listepartie) {
-            state.parties = listepartie
+            state.partie = listepartie
         },
 
         initQuestion(state, total) {
             state.question_actuel = 1
-            state.question_total = total
+            state.question_total = state.Difficulty*10
         },
         nextQuestion(state) {
             state.question_actuel = state.question_actuel + 1
         },
         changeImage(state) {
-            state.images_actuel = state.jeux[state.question_actuel - 1].image;
+            console.log(state.jeux[state.question_actuel - 1].image);
+            state.images_actuel = state.jeux[state.question_actuel - 1].image
         },
         changeScore(state, score) {
             state.score_actuel = state.score_actuel + score
         },
 
         changeCoor(state) {
-            state.marker = L.latLng(state.jeux[state.question_actuel - 1].lat, state.jeux[state.question_actuel - 1].long)
+            state.serie = {
+                lat:47.413220,
+                lng:-1.219482
+            }
         },
       
 
@@ -137,26 +154,29 @@ export default new Vuex.Store({
             commit, state
         },pseudo){
             api.get('series',{}).then(response=>{
-                commit('getSerie', response.data)
+                commit('getSeries', response.data)
             })
             commit('logGame',pseudo)
         },
         createPartieStore({
             commit, state
         },idserie){
-            api.get('parties/'+idserie,{params:{
+            api.get('series/'+idserie,{
+            }).then(response=>{
+                commit('setCurrentSerie', response.data)
+            })
+          api.get('parties/'+idserie,{params:{
                 joueur: state.Pseudo,
                 photo: state.Difficulty*10
             }}).then(response=>{
                 commit('createPartieGame', response.data)    
             })
-            api.get('serie/'+idserie,{
-                params:{
-
-                }
+            /*
+            api.get('series/'+idserie,{
             }).then(response=>{
                 commit('createQuestionnaire', response.data)
-            })
+            })*/
+
         },
 
         created_data({
