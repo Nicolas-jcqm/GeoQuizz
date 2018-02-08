@@ -8,7 +8,7 @@
         <input ref="pseudo" id="pseudo" />
         <br>
         <br>
-        <input type="submit"class="btn-blue" value="Jouer"></input>
+        <input type="submit"class="btn btn-5" value="Jouer"></input>
       </form>
     </div>
     <div v-else>
@@ -79,7 +79,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
     h1,
     h2 {
         font-weight: normal;
