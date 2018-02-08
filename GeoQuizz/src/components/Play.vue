@@ -32,6 +32,14 @@
         mapState
     } from 'vuex'
 
+    import L from 'leaflet'
+
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+        iconUrl: require('leaflet/dist/images/marker-icon.png')
+    })
+
 
     Vue.component('v-map', Vue2Leaflet.Map)
     Vue.component('v-marker', Vue2Leaflet.Marker)
@@ -79,12 +87,20 @@
 
             next() {
                 console.log("next_question")
-                console.log(this.markers)
-                //calculer la distance entre marqueur et les coordonnées
-                let distance_calcule = this.distance(this.marker.lat, this.markers[0].latlng.lat, this.marker.lng, this.markers[0].latlng.lng)
-                console.log(distance_calcule)
-                //dispatch
-                this.$store.dispatch('next_question', distance_calcule, note)
+                if (this.markers.length == 0) {
+                    let conf = confirm("Voulez vous passer cette question!");
+                    if(!conf){
+                        //on fait rien
+                    }else{
+                        this.$store.dispatch('next_question', 0)
+                    }
+                } else {
+                    //calculer la distance entre marqueur et les coordonnées
+                    let distance_calcule = this.distance(this.marker.lat, this.markers[0].lat, this.marker.lng, this.markers[0].lng)
+                    console.log(distance_calcule)
+                    //dispatch
+                    this.$store.dispatch('next_question', distance_calcule)
+                }
                 //reset le markeur
                 this.markers = []
 
