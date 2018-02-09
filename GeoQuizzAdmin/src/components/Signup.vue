@@ -2,6 +2,20 @@
   <div class="hello">
     <img id="logo" src="../assets/map.png">
     <h1>{{ msg }}</h1>
+    <div id="formulaire">
+      <h2>Connexion</h2>
+      <form @submit.prevent="signin()">
+        <div>
+          <label>Mail :</label>
+          <input v-model="user.mail" id="mail" type="text" />
+        </div>
+        <div>
+          <label>Password :</label>
+          <input  v-model="user.password" id="password" type="password" />
+        </div>
+        <div ><input class="btn-blue" type="submit" value="Inscription"/></div>
+    </form>
+  </div>
       <div id="formulaire">
         <h2>Inscription</h2>
         <form @submit.prevent="signup()">
@@ -32,6 +46,7 @@ export default {
   data () {
     return {
       msg: 'GeoQuizzAdmin',
+      user:{mail:"",password:""},
       user_signup:{mail:"",password:"",username:""}
     }
     },
@@ -44,7 +59,16 @@ export default {
               alert(error.response.data);
            })
 
-			   }
+			   },
+      signin(){
+        api.post('/signin',this.user).then((response) =>{
+          sessionStorage.setItem('token',response.data.token);
+          sessionStorage.setItem("isConnected",true);
+          router.push({name:'home'})
+        }).catch((error)=>{
+          alert(error.response.data);
+        })
+      }
 		  }
 }
 </script>
