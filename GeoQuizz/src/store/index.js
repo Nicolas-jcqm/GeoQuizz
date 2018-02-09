@@ -135,7 +135,7 @@ export default new Vuex.Store({
         getSeries(state, listeserie) {
             state.OSeries = listeserie
 
-        },  
+        },
 
         initQuestion(state, total) {
             state.question_actuel = 1
@@ -234,8 +234,6 @@ export default new Vuex.Store({
             state
         }) {
             commit('initJeux')
-            console.log("Itinialisation des donnes")
-            console.log(state)
             //initialisé la question
             commit('initQuestion', 10)
             //initialisé l'images
@@ -244,6 +242,7 @@ export default new Vuex.Store({
             commit('changeImage')
             //initialisé les coordonnées
             commit('changeCoor')
+            console.log(state)
 
         },
 
