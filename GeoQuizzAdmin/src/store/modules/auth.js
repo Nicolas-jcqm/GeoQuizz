@@ -31,7 +31,7 @@ export default {
 	},
 	actions: {
 		login ({commit}, credentials){
-			return api.post('/members/signin', credentials).then(response => { // route a modifier
+			return api.post('/signin', credentials).then(response => { // route a modifier
 				ls.set('token', response.data.token)
 				commit("setConnectedUser", response.data)
 			}).catch(error => {
@@ -39,8 +39,8 @@ export default {
 			})
 		},
 		signup ({commit},credentials){
-			return api.post('/members', credentials).then(response => {  // route a modifier
-				return api.post('/members/signin', credentials).then(response => { //route a modifier
+			return api.post('/signup',credentials).then(response => {  // route a modifier
+				return api.post('/signin', credentials).then(response => { //route a modifier
 					ls.set('token', response.data.token)
 					commit("setConnectedUser", response.data)
 				}).catch(error => {
@@ -55,7 +55,7 @@ export default {
 			commit("initState")
 			ls.remove('token')
 			if(forceDeco){
-				api.delete('/members/signout').then(response => { // route a modifier
+				api.delete('/signout').then(response => { // route a modifier
 					commit("initState")
 				}).catch(error => {
 					reject("store > auth > logout -> error")
