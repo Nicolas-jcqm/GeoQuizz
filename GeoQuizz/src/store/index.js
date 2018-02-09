@@ -33,7 +33,7 @@ export default new Vuex.Store({
                     "latitude": 48.6880796,
                     "longitude": 6.1559274,
                     "distance": 500,
-                    "zoom": 10
+                    "zoom": 10,
         }
     ]
         },
@@ -193,7 +193,6 @@ export default new Vuex.Store({
             state.center = L.latLng(48.66686499999999, 6.134240999999999)
             state.score_actuel = 0
             state.marker = 0
-
         }
     },
     actions: {

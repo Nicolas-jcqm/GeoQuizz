@@ -10,7 +10,7 @@
             <div class="image"><img v-bind:src="jeux[question_actuel-1].url"></div>
             <div id="map">
             <div id="app" style="height: 100%">
-            <v-map @l-click="onclick($event)" :zoom=13 :center='center'>
+            <v-map @l-click="onclick($event)" :zoomControl=false :zoom=13 :center='center'>
                 <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
                 <v-marker :lat-lng="marker"></v-marker>
                 <v-marker v-for="item in markers" :key="item.id" :lat-lng="item.latlng" @l-add="$event.target.openPopup()"></v-marker>
@@ -63,9 +63,9 @@
                 url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 markers: [],
-                affichage_inter: 5,
+                affichage_inter: 2, // a definir
                 inter: 0,
-                id_timer: 0
+                intervall_souhaite: 2 // a definir
             }
         },
 
@@ -97,7 +97,7 @@
                     if (!conf) {
                         //on fait rien
                     } else {
-                        this.$store.dispatch('next_question', 0)
+                        this.resetTimer(0)
                     }
                 } else {
                     //calculer la distance entre marqueur et les coordonnées
@@ -105,7 +105,7 @@
                     let distance_calcule = this.distance(this.jeux[this.question_actuel].latitude, this.markers[0].latlng.lat, this.jeux[this.question_actuel].longitude, this.markers[0].latlng.lng)
                     //console.log(distance_calcule)
                     //dispatch
-                    this.$store.dispatch('next_question', distance_calcule)
+                    this.resetTimer(distance_calcule)
                 }
                 //reset le markeur
                 this.markers = []
@@ -123,27 +123,33 @@
             },
 
             interval() {
-                this.id_timer = setInterval(() => {
+                console.log('null : '+id_timer)
+                let id_timer = setInterval(() => {
                     this.inter++
                         this.affichage_inter--
-                        this.testEnd()
+                        this.testEnd(id_timer)
                 }, 1000);
             },
 
-            testEnd() {
-                if (this.inter === 5) {
+            testEnd(id) {
+                if (this.inter === this.intervall_souhaite) {
                     if (this.question_actuel > this.question_total) {
+                        //Jeux finit 
                         this.inter = 0
-                        this.affichage_inter = 5
-
-                        window.clearInterval(this.id_timer)
+                        this.affichage_inter = this.intervall_souhait
+                        window.clearInterval(id)
                     } else {
-                        this.inter = 0
-                        this.affichage_inter = 5
-                        this.$store.dispatch('next_question', 0)
+                        //question suivante
+                        this.resetTimer(0)
                     }
                 }
 
+            },
+
+            resetTimer(dist) {
+                this.inter = 0
+                this.affichage_inter = this.intervall_souhaite
+                this.$store.dispatch('next_question', dist)
             },
 
             retour() {
@@ -160,8 +166,51 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
     @import "../../node_modules/leaflet/dist/leaflet.css";
+    h1,
+    h2 {
+        font-weight: normal;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        display: inline-block;
+        margin: 0 10px;
+    }
+
+    a {
+        color: #42b983;
+    }
+
+    .btn-blue {
+        background-color: transparent;
+        border: 0.16em solid Lightsteelblue;
+        color: Lightsteelblue;
+    }
+
+    .btn-blue a {
+        color: Lightsteelblue;
+    }
+
+    .btn-blue:hover {
+        color: Tomato;
+        border-color: Tomato;
+    }
+
+    .btn-blue:hover a {
+        color: #DDDDDD;
+    }
+
+    .btn-blue:active {
+        color: Lightsteelblue;
+        border-color: Lightsteelblue;
+    }
+
 
     #map {
         width: 500px;
