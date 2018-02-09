@@ -107,12 +107,7 @@ export default new Vuex.Store({
     mutations: {
 
         createQuestionnaire(state, listephotos) {
-            for (var i = listephotos.length - 1; i >= 0; i--) {
-                state.jeux[i].lat = listephotos[i].lattitude;
-                state.jeux[i].long = listephotos[i].longitude;
-                state.jeux[i].image = listephotos[i].image;
-                //en cours, remplir les données pour play listephotos[i]
-            }
+            state.jeux = listephotos
         },
 
         setCurrentSerie(state, objserie) {
@@ -131,7 +126,7 @@ export default new Vuex.Store({
         logGame(state, pseudo) {
             state.Pseudo = pseudo
         },
-        
+
         resetScore(state) {
             state.score_actuel = 0
         },
@@ -140,11 +135,7 @@ export default new Vuex.Store({
         getSeries(state, listeserie) {
             state.OSeries = listeserie
 
-        },
-
-        createPartieGame(state, listepartie) {
-            state.partie = listepartie
-        },
+        },  
 
         initQuestion(state, total) {
             state.question_actuel = 1
@@ -224,17 +215,11 @@ export default new Vuex.Store({
                 commit('setCurrentSerie', response.data)
             })
             api.post('parties/', {
-                params: {
-                    serie: idserie,
-                    joueur: state.Pseudo,
-                    photo: state.Difficulty * 10
-                },
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-
+                serie: idserie,
+                joueur: state.Pseudo,
+                photo: state.Difficulty * 10
             }).then(response => {
-                commit('createPartieGame', response.data)
+                commit('createQuestionnaire', response.data)
             })
             /*
             api.get('series/'+idserie,{
