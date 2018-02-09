@@ -64,7 +64,7 @@ export default new Vuex.Store({
         getSeries(state, listeserie) {
             state.OSeries = listeserie
 
-        },  
+        },
 
         initQuestion(state, total) {
             state.question_actuel = 1

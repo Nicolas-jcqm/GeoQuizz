@@ -25,7 +25,7 @@
         <div class="windows" v-else>
             <div class='jeux'>
                 <div id='info_unique'>Jeux terminé</div>
-                <div id='info_unique'>Score actuel : {{ score_actuel }}</div>
+                <div id='info_unique'>Score final : {{ score_actuel }}</div>
             </div>
             <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
         </div>

@@ -2,21 +2,20 @@
   <div class="hello">
     <img id="logo" src="../assets/map.png">
     <h1>{{ msg }}</h1>
-    <div id="formulaires">
-      <div id="formulaire">
-        <h2>Connexion</h2>
-        <form @submit.prevent="signin()">
-          <div>
-            <label for="email">Email :</label>
-            <input v-model="user.mail" id="mail" type="text"/>
-          </div>
-          <div>
-            <label for="password">Password :</label>
-            <input v-model="user.password" id="password" type="password"/>
-          </div>
-          <div ><input class="btn-blue" type="submit" value="Connexion"/></div>
-        </form>
-      </div>
+    <div id="formulaire">
+      <h2>Connexion</h2>
+      <form @submit.prevent="signin()">
+        <div>
+          <label>Mail :</label>
+          <input v-model="user.mail" id="mail" type="text" />
+        </div>
+        <div>
+          <label>Password :</label>
+          <input  v-model="user.password" id="password" type="password" />
+        </div>
+        <div ><input class="btn-blue" type="submit" value="Inscription"/></div>
+    </form>
+  </div>
       <div id="formulaire">
         <h2>Inscription</h2>
         <form @submit.prevent="signup()">
@@ -40,6 +39,8 @@
 </template>
 
 <script>
+import api from '../config/index'
+import router from '../router/index'
 export default {
   name: 'Signup',
   data () {
@@ -50,18 +51,25 @@ export default {
     }
     },
     methods: {
-		  signin () {
-			   this.$store.dispatch('auth/login', this.user).then(response => {
-				     this.$router.push({name: "home"}) // a modifier
-			   })
-		  },
       signup (){
-			   this.$store.dispatch('auth/signup',this.user_signup).then(response =>{
-				     this.$router.push({name: "home"}) // a modifier
-			   })
-		  }
-    }
+			     api.post('/signup',this.user_signup).then((response) =>{
+            alert("inscription réussis");
+            router.push("signup");
+           }).catch((error)=>{
+              alert(error.response.data);
+           })
 
+			   },
+      signin(){
+        api.post('/signin',this.user).then((response) =>{
+          sessionStorage.setItem('token',response.data.token);
+          sessionStorage.setItem("isConnected",true);
+          router.push({name:'home'})
+        }).catch((error)=>{
+          alert(error.response.data);
+        })
+      }
+		  }
 }
 </script>
 
