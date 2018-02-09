@@ -7,7 +7,7 @@
                 <div id='info_unique'>Score actuel : {{ score_actuel }}</div>
                 <div id='timer'>Timer : {{ affichage_inter }}</div>
             </div>
-            <div class="image"><img v-bind:src="jeux[question_actuel-1].url"></div>
+            <div class="image"><img v-bind:src="images_actuel"></div>
             <div id="map">
             <div id="app" style="height: 100%">
             <v-map @l-click="onclick($event)" :zoomControl=false :zoom=13 :center='center'>
@@ -25,7 +25,7 @@
         <div class="windows" v-else>
             <div class='jeux'>
                 <div id='info_unique'>Jeux terminé</div>
-                <div id='info_unique'>Score actuel : {{ score_actuel }}</div>
+                <div id='info_unique'>Score final : {{ score_actuel }}</div>
             </div>
             <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
         </div>
@@ -78,7 +78,7 @@
 
         created() {
             //dispatch
-            this.$store.dispatch('created_data')
+            
             this.interval()
         },
         methods: {
@@ -108,8 +108,8 @@
                 } else {
                     //calculer la distance entre marqueur et les coordonnées
                     console.log(this.question_actuel)
-                    console.log(this.jeux[this.question_actuel - 1])
-                    let distance_calcule = this.distance(this.jeux[this.question_actuel - 1].latitude, this.markers[0].latlng.lat, this.jeux[this.question_actuel - 1].longitude, this.markers[0].latlng.lng)
+                    console.log(this.jeux.photos[this.question_actuel - 1])
+                    let distance_calcule = this.distance(this.jeux.photos[this.question_actuel - 1].latitude, this.markers[0].latlng.lat, this.jeux.photos[this.question_actuel - 1].longitude, this.markers[0].latlng.lng)
                     //console.log(distance_calcule)
                     //dispatch
                     this.resetTimer(distance_calcule)

@@ -67,8 +67,9 @@
             },
 
             createPartie(idserie) {
+                this.$store.dispatch('created_data'),
                 this.$store.dispatch('setDifficulty', this.$refs.select.value),
-                    this.$store.dispatch('createPartieStore', idserie)
+                this.$store.dispatch('createPartieStore', idserie),
                 this.$router.push({
                     name: "Play"
                 })
