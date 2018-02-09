@@ -131,6 +131,11 @@ export default new Vuex.Store({
         logGame(state, pseudo) {
             state.Pseudo = pseudo
         },
+        
+        resetScore(state) {
+            state.score_actuel = 0
+        },
+
 
         getSeries(state, listeserie) {
             state.OSeries = listeserie
@@ -149,7 +154,6 @@ export default new Vuex.Store({
             state.question_actuel = state.question_actuel + 1
         },
         changeImage(state) {
-            //console.log(state.jeux[state.question_actuel - 1].image);
             state.images_actuel = state.jeux[state.question_actuel - 1].image
         },
         calculScore(state, distance_calcule) {
@@ -250,6 +254,8 @@ export default new Vuex.Store({
             //initialisé la question
             commit('initQuestion', 10)
             //initialisé l'images
+            commit('resetScore')
+            //reset score
             commit('changeImage')
             //initialisé les coordonnées
             commit('changeCoor')
@@ -269,7 +275,6 @@ export default new Vuex.Store({
         }, distance_calcule) {
             if (state.question_actuel >= state.question_total) {
                 console.log("Jeux terminé")
-                commit('nextQuestion')
                 commit('jeuxEnd')
             } else {
                 //calcul le score

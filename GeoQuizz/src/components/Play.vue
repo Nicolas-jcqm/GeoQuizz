@@ -17,10 +17,16 @@
             </v-map>
             </div>
             </div>
-            <button type="button" class="btn btn-rep btn-3" @click="next()">Question suivante</button>
+            <div id="rep">
+                <button type="button" class="btn btn-rep btn-4" @click="pause()">Mettre en pause</button>
+                <button type="button" class="btn btn-rep btn-1" @click="next()">Question suivante</button>
+            </div>
         </div>
         <div class="windows" v-else>
-            <div class="jeux">Jeux terminé</div>
+            <div class='jeux'>
+                <div id='info_unique'>Jeux terminé</div>
+                <div id='info_unique'>Score actuel : {{ score_actuel }}</div>
+            </div>
             <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
         </div>
   </div>
@@ -63,9 +69,9 @@
                 url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 markers: [],
-                affichage_inter: 2, // a definir
+                affichage_inter: 30, // a definir
                 inter: 0,
-                intervall_souhaite: 2 // a definir
+                intervall_souhaite: 30 // a definir
             }
         },
 
@@ -101,8 +107,9 @@
                     }
                 } else {
                     //calculer la distance entre marqueur et les coordonnées
-                    //console.log(this.markers[0].latlng.lat)
-                    let distance_calcule = this.distance(this.jeux[this.question_actuel].latitude, this.markers[0].latlng.lat, this.jeux[this.question_actuel].longitude, this.markers[0].latlng.lng)
+                    console.log(this.question_actuel)
+                    console.log(this.jeux[this.question_actuel - 1])
+                    let distance_calcule = this.distance(this.jeux[this.question_actuel - 1].latitude, this.markers[0].latlng.lat, this.jeux[this.question_actuel - 1].longitude, this.markers[0].latlng.lng)
                     //console.log(distance_calcule)
                     //dispatch
                     this.resetTimer(distance_calcule)
@@ -122,8 +129,18 @@
                 return d;
             },
 
+            pause() {
+
+                let conf = confirm("Jeux en pause ! Confirmer pour reprendre le jeux");
+                if (!conf) {
+                    this.pause()
+                } else {
+                    //on fait rien
+                }
+            },
+
             interval() {
-                console.log('null : '+id_timer)
+                console.log('null : ' + id_timer)
                 let id_timer = setInterval(() => {
                     this.inter++
                         this.affichage_inter--
@@ -166,8 +183,9 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
     @import "../../node_modules/leaflet/dist/leaflet.css";
+
     h1,
     h2 {
         font-weight: normal;
@@ -213,14 +231,14 @@
 
 
     #map {
-        width: 500px;
-        height: 500px;
+        width: 50vh;
+        height: 50vh;
         margin: auto;
     }
 
     .image {
-        max-width: 500px;
-        max-height: 500px;
+        max-width: 50vh;
+        max-height: 50vh;
         margin: auto;
     }
 
@@ -245,9 +263,10 @@
     }
 
     .jeux {
-        height: 300%;
         width: 100%;
         margin: auto;
+        margin-top: 30vh;
+        margin-bottom: 30vh;
         vertical-align: middle;
     }
 
@@ -375,7 +394,15 @@
     }
 
     .btn-rep {
+        width: 50%;
+    }
+
+    #rep {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
         margin-top: 200px;
+        width: 100%;
     }
 
     .btn-6:hover {

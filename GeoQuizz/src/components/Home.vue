@@ -79,97 +79,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-    h1,
-    h2 {
-        font-weight: normal;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
-
-    a {
-        color: #42b983;
-    }
-
-    .btn-blue {
-        background-color: transparent;
-        border: 0.16em solid Lightsteelblue;
-        color: Lightsteelblue;
-    }
-
-    .btn-blue a {
-        color: Lightsteelblue;
-    }
-
-    .btn-blue:hover {
-        color: Tomato;
-        border-color: Tomato;
-    }
-
-    .btn-blue:hover a {
-        color: #DDDDDD;
-    }
-
-    .btn-blue:active {
-        color: Lightsteelblue;
-        border-color: Lightsteelblue;
-    }
-
-
-    #map {
-        width: 500px;
-        height: 500px;
-        margin: auto;
-    }
-
-    .image {
-        max-width: 500px;
-        max-height: 500px;
-        margin: auto;
-    }
-
-    .windows {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    #info_unique {
-        flex-basis: 30%;
-        flex-grow: 1;
-    }
-
-    #timer {
-        width: 100%
-    }
-
-    .btn {
-        margin-top: 50px;
-        width: 80%;
-    }
-
-    .jeux {
-        height: 300%;
-        width: 100%;
-        margin: auto;
-        vertical-align: middle;
-    }
-
-    .info {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-    }
-
+<style>
     html,
     body {
         height: 100%;
@@ -287,7 +197,15 @@
     }
 
     .btn-rep {
+        width: 50%;
+    }
+
+    #rep {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
         margin-top: 200px;
+        width: 100%;
     }
 
     .btn-6:hover {
