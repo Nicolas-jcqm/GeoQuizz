@@ -1,23 +1,35 @@
 <template>
   <div>
-    <h1> {{series}}</h1>
+  <div id="formule">
+    <h1> {{series.nom}}</h1>
     <form @submit.prevent="putSerie()" class="form-sign">
+        <div>
         <label>Nom de la série : </label>
-        <input ref="nom" :value="series.nom" />
+        <input type="text" ref="nom" :value="series.nom" />
+        </div>
+        <div>
         <label>Latitude : </label>
-        <input ref="latitude" :value="series.latitude" />
+        <input type="number" ref="latitude" :value="series.latitude" />
+        </div>
+        <div>
         <label>Longitude : </label>
-        <input ref="longitude" :value="series.longitude" />
+        <input type="number" ref="longitude" :value="series.longitude" />
+        </div>
+        <div>
         <label>Distance : </label>
-        <input ref="distance" :value="series.distance" />
+        <input type="number" ref="distance" :value="series.distance" />
+        </div>
+        <div>
         <label>Ville : </label>
-        <input ref="ville" :value="series.ville" />
+        <input type="text" ref="ville" :value="series.ville" />
+        </div>
+        <div>
         <label>Zoom : </label>
-        <input ref="zoom" :value="series.zoom" />
-        <br>
-        <br>
+        <input type="number" ref="zoom" :value="series.zoom" />
+        </div>
         <input type="submit"class="btn btn-5" value="Modifier une des valeurs"></input>
       </form>
+      </div>
   </div>
 </template>
 <script>
@@ -47,3 +59,36 @@
     }
   }
 </script>
+<style>
+#formule{
+border:3px solid #f1f1f1;
+width:50%;
+margin:0 auto 0 auto;
+text-align:center;
+margin-top: 50vh;
+ transform: translateY(-50%);
+}
+#formule h1{
+	color:Tomato;
+}
+input[type=text],input[type=number] {
+		width: 100%;
+		padding: 12px 20px;
+		margin: 8px 0;
+		display: inline-block;
+		border: 1px solid #ccc;
+		box-sizing: border-box;
+}
+input[type=submit] {
+		background-color: Tomato;
+		color: white;
+		padding: 14px 20px;
+		margin: 8px 0;
+		border: none;
+		cursor: pointer;
+    width: 100%;
+}
+input[type=submit]:hover{
+background-color:Maroon;
+}
+</style>
