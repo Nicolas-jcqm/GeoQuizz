@@ -20,7 +20,6 @@ Vue.use(Router)
         },
         {
           path:'/',
-          name:"Creation",
           component:Creation
         }
       ]

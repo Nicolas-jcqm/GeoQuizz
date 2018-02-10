@@ -1,5 +1,5 @@
 <template>
-  <div id="formule" @submit="add()">
+  <div id="formule" @submit.prevent="add()">
     <h1> Créer une Série</h1>
     <form>
       <div>
@@ -39,14 +39,15 @@ export default {
   name: 'Creation',
   data(){
   return{
-    serie:{nom:"",ville:"",latitude:"",longitude:"",userid:"",zoom:"",distance:""}
+    serie:{nom:"",ville:"",latitude:"",longitude:"",userid:sessionStorage.getItem("userid"),zoom:"",distance:""}
   }
   },
   methods:{
     add(){
-    this.serie.userid=sessionStorage.getItem("userid");
-      api.post("/series",this.serie).then((response)=>{
+      api.post("/series", this.serie, {headers: { 'content-type': 'application/json' }}).then((response)=>{
           console.log(response.data);
+      }).catch(error =>{
+          console.log(error);
       })
     }
   }
