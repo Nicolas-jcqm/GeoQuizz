@@ -90,7 +90,9 @@ button:hover,#add a:hover{
 
 .serie {
 	margin:0;
+	border-bottom:1px solid grey;
 	}
+
 	.serie a{
 		display: block;
  	color: #000;

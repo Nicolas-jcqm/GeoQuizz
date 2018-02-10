@@ -72,7 +72,7 @@ export default new Vuex.Store({
 
         enrDist(state, payload) {
             if (payload.key1 == 0) {
-                state.distance_tab.push('Question passé 0')
+                state.distance_tab.push('Question passé, 0')
             } else {
                 state.distance_tab.push(Math.round(payload.key1))
             }
@@ -101,48 +101,57 @@ export default new Vuex.Store({
             } else {
                 multpiplicateur = 1
             }
-            state.mutliplicateurs.push(multpiplicateur)
             if (payload.key1 === 0) {
                 state.score_actuel = state.score_actuel + 1
                 state.score_tab.push(1)
+                state.mutliplicateurs.push('aucun')
+                
             } else {
+                
                 if ((state.serie.distance / state.Difficulty) / 4 > payload.key1) {
                     score_inter = Math.round((350 * multpiplicateur))
                     state.score_actuel = state.score_actuel + score_inter
                     //enregistre le dernier score
                     state.score_tab.push(score_inter)
+                    state.mutliplicateurs.push(multpiplicateur)
                 } else {
                     if ((state.serie.distance / state.Difficulty) / 3 > payload.key1) {
                         score_inter = Math.round((250 * multpiplicateur))
                         state.score_actuel = state.score_actuel + score_inter
                         //enregistre le dernier score
                         state.score_tab.push(score_inter)
+                        state.mutliplicateurs.push(multpiplicateur)
                     } else {
                         if ((state.serie.distance / state.Difficulty) / 2 > payload.key1) {
                             score_inter = Math.round((200 * multpiplicateur))
                             state.score_actuel = state.score_actuel + score_inter
                             //enregistre le dernier score
                             state.score_tab.push(score_inter)
+                            state.mutliplicateurs.push(multpiplicateur)
                         } else {
                             if (state.serie.distance / state.Difficulty > payload.key1) {
                                 score_inter = Math.round((100 * multpiplicateur))
                                 state.score_actuel = state.score_actuel + score_inter
                                 //enregistre le dernier score
                                 state.score_tab.push(score_inter)
+                                state.mutliplicateurs.push(multpiplicateur)
                             } else {
                                 if ((state.serie.distance / state.Difficulty) * 2 > payload.key1) {
                                     score_inter = Math.round((50 * multpiplicateur))
                                     state.score_actuel = state.score_actuel + score_inter
                                     //enregistre le dernier score
                                     state.score_tab.push(score_inter)
+                                    state.mutliplicateurs.push(multpiplicateur)
                                 } else {
                                     if ((state.serie.distance / state.Difficulty) * 4 > payload.key1) {
                                         score_inter = Math.round((25 * multpiplicateur))
                                         state.score_actuel = state.score_actuel + score_inter
                                         //enregistre le dernier score
                                         state.score_tab.push(score_inter)
+                                        state.mutliplicateurs.push(multpiplicateur)
                                     } else {
                                         state.score_tab.push(10)
+                                        state.mutliplicateurs.push('aucun')
                                     }
                                 }
                             }
@@ -177,6 +186,7 @@ export default new Vuex.Store({
             state.marker = 0
             state.distance_tab = []
             state.score_tab = []
+            state.mutliplicateurs = []
         }
     },
     actions: {
@@ -282,6 +292,7 @@ export default new Vuex.Store({
                 api.get('series/' + state.serie.id + '/parties', {}).then(response => {
                     state.best_score = response.data
                 })
+
                 commit('jeuxEnd')
             }
         }
