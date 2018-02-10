@@ -3,11 +3,20 @@
 ## Authors
 Nicolas Jacquemin - Lucas Marquant - Quentin Parmentier - Thibaud Grepin
 LP CISIIE Gr.2
+Installation :
+
+Vuejs :
+
+Dans \GeoQuizz\GeoQuizz\src\config\index.js mettre l'url de l'API J2E
+Dans \GeoQuizz\GeoQuizz\src\store\index.js a la ligne 93, mettre le lien vers l'api de J2E 
+
+npm install
+npm run dev
 
 
 MARQUANT Lucas : 
 Vuejs  :
-
+{
 - Jeux entier (front ) avec methode pour passer au questionx suivantes
 - interval dans le jeux (question)
 - timer dans le jeu
@@ -29,6 +38,6 @@ Reste :
 
 - gestion de la bdd
 - trello, bitbucker etc ...
-
+}
 
 
