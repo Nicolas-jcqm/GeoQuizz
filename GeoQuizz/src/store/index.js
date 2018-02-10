@@ -17,6 +17,9 @@ export default new Vuex.Store({
     plugins: [createPersistedState()],
     modules: {},
     state: {
+        distance_tab: [],
+        score_tab: [],
+        mutliplicateurs: [],
         jeux_finit: 0,
         question_total: 0,
         Pseudo: "",
@@ -39,7 +42,7 @@ export default new Vuex.Store({
         },
 
         setCurrentSerie(state, objserie) {
-            state.serie=objserie;
+            state.serie = objserie;
             state.center = L.latLng(objserie.latitude, objserie.longitude);
 
         },
@@ -66,29 +69,82 @@ export default new Vuex.Store({
 
         },
 
+        enrDist(state, payload) {
+            if (payload.key1 == 0) {
+                state.distance_tab.push('Question passé 0')
+            } else {
+                state.distance_tab.push(Math.round(payload.key1))
+            }
+        },
+
+        enrScore(state, score) {
+            state.score_tab.push(score)
+        },
+
         initQuestion(state, total) {
             state.question_actuel = 1
-            state.question_total = state.Difficulty * 10
+            state.question_total = 10
         },
         nextQuestion(state) {
             state.question_actuel = state.question_actuel + 1
         },
         changeImage(state) {
-            console.log(state.question_actuel)
-            state.images_actuel = "http://192.168.99.100:8080/"+state.jeux.photos[state.question_actuel - 1].url
+            state.images_actuel = "http://192.168.99.100:8080/" + state.jeux.photos[state.question_actuel - 1].url
         },
-        calculScore(state, distance_calcule) {
-            if (distance_calcule === 0) {
-                state.score_actuel = state.score_actuel + 1
+        calculScore(state, payload) {
+            let score_inter = 0;
+            console.log(payload)
+            let multpiplicateur = 0
+            if (payload.key2 > 10) {
+                multpiplicateur = payload.key2 / 10;
             } else {
-                if (state.serie.distance / state.Difficulty > distance_calcule) {
-                    state.score_actuel = state.score_actuel + 100
+                multpiplicateur = 1
+            }
+            state.mutliplicateurs.push(multpiplicateur)
+            if (payload.key1 === 0) {
+                state.score_actuel = state.score_actuel + 1
+                state.score_tab.push(1)
+            } else {
+                if ((state.serie.distance / state.Difficulty) / 4 > payload.key1) {
+                    score_inter = Math.round((350 * multpiplicateur))
+                    state.score_actuel = state.score_actuel + score_inter
+                    //enregistre le dernier score
+                    state.score_tab.push(score_inter)
                 } else {
-                    if ((state.serie.distance / state.Difficulty) * 2 > distance_calcule) {
-                        state.score_actuel = state.score_actuel + 50
+                    if ((state.serie.distance / state.Difficulty) / 3 > payload.key1) {
+                        score_inter = Math.round((250 * multpiplicateur))
+                        state.score_actuel = state.score_actuel + score_inter
+                        //enregistre le dernier score
+                        state.score_tab.push(score_inter)
                     } else {
-                        if ((state.serie.distance / state.Difficulty) * 4 > distance_calcule) {
-                            state.score_actuel = state.score_actuel + 25
+                        if ((state.serie.distance / state.Difficulty) / 2 > payload.key1) {
+                            score_inter = Math.round((200 * multpiplicateur))
+                            state.score_actuel = state.score_actuel + score_inter
+                            //enregistre le dernier score
+                            state.score_tab.push(score_inter)
+                        } else {
+                            if (state.serie.distance / state.Difficulty > payload.key1) {
+                                score_inter = Math.round((100 * multpiplicateur))
+                                state.score_actuel = state.score_actuel + score_inter
+                                //enregistre le dernier score
+                                state.score_tab.push(score_inter)
+                            } else {
+                                if ((state.serie.distance / state.Difficulty) * 2 > payload.key1) {
+                                    score_inter = Math.round((50 * multpiplicateur))
+                                    state.score_actuel = state.score_actuel + score_inter
+                                    //enregistre le dernier score
+                                    state.score_tab.push(score_inter)
+                                } else {
+                                    if ((state.serie.distance / state.Difficulty) * 4 > payload.key1) {
+                                        score_inter = Math.round((25 * multpiplicateur))
+                                        state.score_actuel = state.score_actuel + score_inter
+                                        //enregistre le dernier score
+                                        state.score_tab.push(score_inter)
+                                    } else {
+                                        state.score_tab.push(10)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -118,6 +174,8 @@ export default new Vuex.Store({
             state.center = L.latLng(0, 0)
             state.score_actuel = 0
             state.marker = 0
+            state.distance_tab = []
+            state.score_tab = []
         }
     },
     actions: {
@@ -148,7 +206,7 @@ export default new Vuex.Store({
             api.post('parties/', {
                 serie: idserie,
                 joueur: state.Pseudo,
-                photo: state.Difficulty * 10
+                photo: 10
             }).then(response => {
                 commit('createQuestionnaire', response.data)
                 commit('initQuestion', state.Difficulty * 10)
@@ -171,13 +229,6 @@ export default new Vuex.Store({
 
         },
 
-        created_data({
-            commit,
-            state
-        }) {
-
-        },
-
         reset_state({
             commit,
             state
@@ -194,23 +245,35 @@ export default new Vuex.Store({
         next_question({
             commit,
             state
-        }, distance_calcule) {
-            if (state.question_actuel >= state.question_total) {
-                console.log("Jeux terminé")
-                commit('jeuxEnd')
-
-                api.put('parties/status', {
-                    token: state.jeux.partie.token,
-                    estEnCours: false})
-            } else {
+        }, payload) {
+            if (state.question_actuel === state.question_total) {
+                console.log("dernier question")
                 //calcul le score
-                commit('calculScore', distance_calcule)
+                commit('calculScore', payload)
+                //enregistre le dernier distance
+                commit('enrDist', payload)
+                //On passe a la prochaine question pour arreter le jeux
+                commit('nextQuestion')
+                //on passe la variable jeux a 1
+            }
+            if (state.question_actuel < state.question_total) {
+                //calcul le score
+                commit('calculScore', payload)
+                //enregistre le dernier distance
+                commit('enrDist', payload)
                 //passé a la question suivante
                 commit('nextQuestion')
                 //change l'image
                 commit('changeImage')
                 //actualisé les coordonnées du prochain point 
                 commit('changeCoor')
+            }
+            if (state.question_actuel > state.question_total) {
+              api.put('parties/status', {
+                    token: state.jeux.partie.token,
+                    estEnCours: false})
+                }
+                commit('jeuxEnd')
             }
 
         }

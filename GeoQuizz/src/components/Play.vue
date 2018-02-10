@@ -7,7 +7,7 @@
                 <div id='info_unique'>Score actuel : {{ score_actuel }}</div>
                 <div id='timer'>Timer : {{ affichage_inter }}</div>
             </div>
-            <div class="image"><img v-bind:src="images_actuel"></div>
+            <div class="image"><img class="img" v-bind:src="images_actuel"></div>
             <div id="map">
             <div id="app" style="height: 100%">
             <v-map @l-click="onclick($event)" :zoomControl=false :zoom=13 :center='center'>
@@ -22,10 +22,21 @@
                 <button type="button" class="btn btn-rep btn-1" @click="next()">Question suivante</button>
             </div>
         </div>
+
         <div class="windows" id="jeux_end" v-else>
+            <div id='info_unique' class="end" >Jeux terminé</div>
             <div class='jeux'>
-                <div id='info_unique'>Jeux terminé</div>
-                <div id='info_unique'>Score final : {{ score_actuel }}</div>
+                <div class="left-res">
+                    <div v-for="item in question_total">
+                    <p class="question">Question : {{ item }}</p>
+                    <p>{{ distance_tab[item - 1 ] }} metre</p>
+                    <p>{{ score_tab[item - 1 ] }} points (x{{ mutliplicateurs[item - 1] }})</p>
+                    </br>
+                    
+                </div>
+                </div>
+                <div id='final'>Score final : {{ score_actuel }}</div>
+                
             </div>
             <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
             <button type="button" id="button_score" class="btn btn-4" @click="putScore()">Sauvegardez votre score</button>
@@ -61,7 +72,7 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_actuel', 'jeux_finit', 'serie', 'jeux', 'marker'])
+            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_actuel', 'jeux_finit', 'serie', 'jeux', 'marker', 'score_tab', 'distance_tab', 'Difficulty', 'mutliplicateurs'])
         },
 
         data() {
@@ -72,14 +83,14 @@
                 markers: [],
                 affichage_inter: 30, // a definir
                 inter: 0,
-                intervall_souhaite: 30 // a definir
+                intervall_souhaite: 30, // a definir
+                id_timer: null
             }
         },
 
 
         created() {
             //dispatch
-            
             this.interval()
         },
         methods: {
@@ -97,23 +108,22 @@
             },
 
             next() {
-                //console.log("hello")
-                //console.log(this.serie)
                 if (this.markers.length == 0) {
                     let conf = confirm("Voulez vous passer cette question!");
                     if (!conf) {
                         //on fait rien
                     } else {
-                        this.resetTimer(0)
+                        this.resetTimer(0, this.affichage_inter)
+
                     }
                 } else {
+
                     //calculer la distance entre marqueur et les coordonnées
-                    console.log(this.question_actuel)
-                    console.log(this.jeux.photos[this.question_actuel - 1])
+
                     let distance_calcule = this.distance(this.jeux.photos[this.question_actuel - 1].latitude, this.markers[0].latlng.lat, this.jeux.photos[this.question_actuel - 1].longitude, this.markers[0].latlng.lng)
-                    //console.log(distance_calcule)
+
                     //dispatch
-                    this.resetTimer(distance_calcule)
+                    this.resetTimer(distance_calcule, this.affichage_inter)
                 }
                 //reset le markeur
                 this.markers = []
@@ -141,33 +151,41 @@
             },
 
             interval() {
-                console.log('null : ' + id_timer)
-                let id_timer = setInterval(() => {
+                let id = setInterval(() => {
+                    this.id_timer = id
                     this.inter++
                         this.affichage_inter--
-                        this.testEnd(id_timer)
+                        this.testEnd()
                 }, 1000);
             },
 
-            testEnd(id) {
+            testEnd() {
                 if (this.inter === this.intervall_souhaite) {
                     if (this.question_actuel > this.question_total) {
                         //Jeux finit 
                         this.inter = 0
                         this.affichage_inter = this.intervall_souhait
-                        window.clearInterval(id)
+                        window.clearInterval(this.id_timer)
                     } else {
                         //question suivante
-                        this.resetTimer(0)
+                        this.resetTimer(0, 0)
                     }
                 }
 
             },
 
-            resetTimer(dist) {
+            resetTimer(dist, timer) {
                 this.inter = 0
+                let payload = {
+                    'key1': dist,
+                    'key2': timer
+                }
+                this.$store.dispatch('next_question', payload)
                 this.affichage_inter = this.intervall_souhaite
-                this.$store.dispatch('next_question', dist)
+
+                if ((this.question_actuel > this.question_total)) {
+                    window.clearInterval(this.id_timer)
+                }
             },
 
             retour() {
@@ -196,6 +214,15 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
     @import "../../node_modules/leaflet/dist/leaflet.css";
+    .end {
+        font-weight: 200;
+        font-style: italic;
+        text-decoration: underline;
+    }
+
+    .question {
+        color: blueviolet;
+    }
 
     h1,
     h2 {
@@ -240,6 +267,12 @@
         border-color: Lightsteelblue;
     }
 
+    #final {
+        width: 100%;
+        color: indianred;
+        font-weight: 200;
+    }
+
 
     #map {
         width: 50vh;
@@ -248,9 +281,14 @@
     }
 
     .image {
+        width: 50vh;
         max-width: 50vh;
         max-height: 50vh;
         margin: auto;
+    }
+
+    .img {
+        width: 100%;
     }
 
     .windows {
@@ -276,9 +314,20 @@
     .jeux {
         width: 100%;
         margin: auto;
-        margin-top: 30vh;
-        margin-bottom: 30vh;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
         vertical-align: middle;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .left-res {
+        width: 45%;
+    }
+
+    .right-res {
+        width: 45%;
     }
 
     .info {
