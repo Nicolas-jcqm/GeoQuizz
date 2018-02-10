@@ -27,13 +27,21 @@
             <div id='info_unique' class="end" >Jeux terminé</div>
             <div class='jeux'>
                 <div class="left-res">
+                    <p class="titre">Resultat :</p>
                     <div v-for="item in question_total">
                     <p class="question">Question : {{ item }}</p>
                     <p>{{ distance_tab[item - 1 ] }} metre</p>
                     <p>{{ score_tab[item - 1 ] }} points (x{{ mutliplicateurs[item - 1] }})</p>
                     </br>
-                    
                 </div>
+                </div>
+                <div class="right-res">
+                    <p class="titre">Meilleur score :</p>
+                    <div v-for="item in best_score.parties">
+                    <p class="question">Nom : {{ item.idJoueur }}</p>
+                    <p>Score : {{ item.score }} </p>
+                    </br>
+                    </div>
                 </div>
                 <div id='final'>Score final : {{ score_actuel }}</div>
                 
@@ -41,6 +49,7 @@
             <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
             <button type="button" id="button_score" class="btn btn-4" @click="putScore()">Sauvegardez votre score</button>
         </div>
+    </div>
   </div>
 </template>
 
@@ -72,7 +81,7 @@
 
     export default {
         computed: {
-            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_actuel', 'jeux_finit', 'serie', 'jeux', 'marker', 'score_tab', 'distance_tab', 'Difficulty', 'mutliplicateurs'])
+            ...mapState(['question_actuel', 'OSeries', 'question_total', 'images_actuel', 'center', 'score_actuel', 'jeux_finit', 'serie', 'jeux', 'marker', 'score_tab', 'distance_tab', 'Difficulty', 'mutliplicateurs', 'best_score'])
         },
 
         data() {
@@ -198,9 +207,9 @@
             putScore() {
                 this.$store.dispatch('putScore')
                 document.getElementById("button_score").remove()
-                var jump=document.createElement("br")
-                var saveelem=document.createElement("label")
-                var savetext=document.createTextNode("Score sauvegardé")
+                var jump = document.createElement("br")
+                var saveelem = document.createElement("label")
+                var savetext = document.createTextNode("Score sauvegardé")
                 saveelem.appendChild(savetext)
                 document.getElementById("jeux_end").appendChild(jump)
                 document.getElementById("jeux_end").appendChild(saveelem)
@@ -395,6 +404,12 @@
         animation: stripes-move 0.75s infinite linear;
         background: repeating-linear-gradient(45deg, #82f6d8 0, #82f6d8 0.25em, transparent 0.25em, transparent 0.5em);
         color: #f682a0;
+    }
+    
+    .titre{
+        color: firebrick;
+        font-size: 2em;
+        font-weight: 100;
     }
 
     @keyframes stripes-move {

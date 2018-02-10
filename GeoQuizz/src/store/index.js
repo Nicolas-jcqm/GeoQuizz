@@ -31,7 +31,8 @@ export default new Vuex.Store({
         score_actuel: 0,
         Difficulty: 1,
         marker: 0,
-        jeux: []
+        jeux: [],
+        best_score: []
     },
 
     getters: {},
@@ -286,6 +287,12 @@ export default new Vuex.Store({
                     token: state.jeux.partie.token,
                     estEnCours: false
                 })
+
+                
+                api.get('series/' + state.serie.id + '/parties', {}).then(response => {
+                    state.best_score = response.data
+                })
+
                 commit('jeuxEnd')
             }
         }
