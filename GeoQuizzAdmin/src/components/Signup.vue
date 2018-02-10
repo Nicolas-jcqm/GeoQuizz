@@ -71,7 +71,7 @@ export default {
           sessionStorage.setItem('token',response.data.token);
           sessionStorage.setItem("isConnected",true);
           sessionStorage.setItem("mail",this.user.mail)
-        //  sessionStorage.setItem("userid",response.data.id);
+          sessionStorage.setItem("userid",response.data.userid);
           router.push({name:'Test'})
         }).catch((error)=>{
           alert(error.response.data);

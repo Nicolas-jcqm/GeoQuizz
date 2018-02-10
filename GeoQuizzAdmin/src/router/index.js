@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Signup from '@/components/Signup'
 import store from '@/store'
 import Test from'@/components/Test'
+import Serie from'@/components/Serie'
+import Creation from'@/components/Creation'
 Vue.use(Router)
 
  const router= new Router({
@@ -10,8 +12,20 @@ Vue.use(Router)
     {
       path:'/test',
       component:Test,
-      name:"Test"
+      name:"Test",
+      children:[
+        {
+          path:':id',
+          component:Serie
+        },
+        {
+          path:'/',
+          name:"Creation",
+          component:Creation
+        }
+      ]
     },
+
     {
         path: '',
         name: 'Signup',

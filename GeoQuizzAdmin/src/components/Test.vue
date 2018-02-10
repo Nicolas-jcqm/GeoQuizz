@@ -4,9 +4,15 @@
       <h1>{{user.mail}}</h1>
 			<button  v-on:click="logout()">déconnexion</button>
 			<h2>Series</h2>
-      <p v-for="ser in series" class="series">
-				<router-link :to="{ path: '/test/' + serie._id }">{{serie.label}}</router-link>
+			<p id="add">
+					<router-link :to="{ path: '/test' }">Créer une série</router-link>
+			</P>
+      <p v-for="ser in series" class="serie">
+				<router-link :to="{ path: '/test/' + ser.id }">{{ser.nom}}</router-link>
 			</p>
+		</div>
+		<div id="right">
+			<router-view :key="$route.fullPath"></router-view>
 		</div>
 	</div>
 </template>
@@ -23,9 +29,9 @@ import router from '@/router'
     },
     created(){
       this.user.mail=sessionStorage.getItem("mail");
-      api.get('/series/admin',{"userid":sessionStorage.getItem("userid")}).then((response)=>{
-        this.series= response.data;
-
+      api.get('/series/admin?userid='+sessionStorage.getItem("userid")).then((response)=>{
+			console.log(response.data);
+        this.series= response.data.seriesUser;
       })
     },
     methods: {
@@ -61,19 +67,45 @@ top:0;
 		padding-top: 5px;
 		border-bottom: 2px solid Tomato;
 	}
+	#add {
+margin:0;
+margin-bottom:2px;
+}
   button{
 	width:60%;
 	margin: auto;
 	margin-bottom:2px;
 }
-button{
+button,#add a{
 	display: block;
 color: white;
 padding: 8px 16px;
 text-decoration: none;
 background-color:Tomato;
 }
-button:hover{
+button:hover,#add a:hover{
 	background-color:Maroon;
+}
+
+
+.serie {
+	margin:0;
+	}
+	.serie a{
+		display: block;
+ 	color: #000;
+ 	padding: 8px 16px;
+ 	text-decoration: none;
+	}
+ 	.serie a:hover{
+    background-color:Tomato;
+    color: white;
+}
+#right{
+background-color:red;
+width:75%;
+height:100%;
+margin-left:25%;
+padding:1px 16px;
 }
 </style>
