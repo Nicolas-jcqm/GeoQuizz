@@ -31,7 +31,8 @@ export default new Vuex.Store({
         score_actuel: 0,
         Difficulty: 1,
         marker: 0,
-        jeux: []
+        jeux: [],
+        best_score: []
     },
 
     getters: {},
@@ -236,9 +237,12 @@ export default new Vuex.Store({
             commit('reset')
         },
 
-        putScore({commit,state},score){
-            api.put('parties/score?token='+state.jeux.partie.token,{
-                score: ""+state.score_actuel
+        putScore({
+            commit,
+            state
+        }, score) {
+            api.put('parties/score?token=' + state.jeux.partie.token, {
+                score: "" + state.score_actuel
             })
         },
 
@@ -269,14 +273,19 @@ export default new Vuex.Store({
                 commit('changeCoor')
             }
             if (state.question_actuel > state.question_total) {
-              api.put('parties/status', {
+                api.put('parties/status', {
                     token: state.jeux.partie.token,
-                    estEnCours: false})
-                }
+                    estEnCours: false
+                })
+
+                
+                api.get('series/' + state.serie.id + '/parties', {}).then(response => {
+                    state.best_score = response.data
+                })
                 commit('jeuxEnd')
             }
-
         }
+
     }
 
 });
