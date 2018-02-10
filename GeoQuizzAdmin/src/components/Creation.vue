@@ -45,7 +45,7 @@ export default {
   methods:{
     add(){
     this.serie.userid=sessionStorage.getItem("userid");
-      api.post("/series",this.serie,{headers: { 'content-type': 'application/json' }}).then((response)=>{
+      api.post("/series",this.serie).then((response)=>{
           console.log(response.data);
       })
     }
