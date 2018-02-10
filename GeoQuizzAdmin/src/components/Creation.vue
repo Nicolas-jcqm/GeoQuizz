@@ -4,27 +4,27 @@
     <form>
       <div>
         <label for="nom">Nom de la série</label>
-        <input type="text" v-model="series.serie.nom" id="nom" name="ville"  required>
+        <input type="text" v-model="serie.nom" id="nom" name="ville"  required>
       </div>
       <div>
       <label for="description">Zoom</label>
-      <input type="number" v-model="series.serie.zoom" id="zoom" name="zoom"  required>
+      <input type="number" v-model="serie.zoom" id="zoom" name="zoom"  required>
       </div>
       <div>
         <label for="distance">Distance</label>
-       <input type="number" v-model="series.serie.distance" id="distance" name="distance" required>
+       <input type="number" v-model="serie.distance" id="distance" name="distance" required>
       </div>
       <div>
         <label for="ville">Ville</label>
-       <input type="text" v-model="series.serie.ville" id="ville" name="ville" required>
+       <input type="text" v-model="serie.ville" id="ville" name="ville" required>
       </div>
       <div>
         <label for="latitude">Latitude</label>
-       <input type="number" step="0.01" v-model="series.serie.latitude" id="latitude" name="latitude" required>
+       <input type="number" step="0.01" v-model="serie.latitude" id="latitude" name="latitude" required>
       </div>
       <div>
         <label for="longitude">Longitude</label>
-       <input type="number" step="0.01"  v-model="series.serie.longitude" id="longitude" name="longitude" required>
+       <input type="number" step="0.01"  v-model="serie.longitude" id="longitude" name="longitude" required>
       </div>
       <div>
       <input type="submit" value="Ajouter">
@@ -39,12 +39,12 @@ export default {
   name: 'Creation',
   data(){
   return{
-    series:{serie:{nom:"",ville:"",latitude:"",longitude:"",userid:"",zoom:"",distance:"",listePhotos:[]}}
+    serie:{nom:"",ville:"",latitude:"",longitude:"",userid:"",zoom:"",distance:""}
   }
   },
   methods:{
     add(){
-    userid=sessionStorage.getItem("userid");
+    this.serie.userid=sessionStorage.getItem("userid");
       api.post("/series",this.serie,{headers: { 'content-type': 'application/json' }}).then((response)=>{
           console.log(response.data);
       })
