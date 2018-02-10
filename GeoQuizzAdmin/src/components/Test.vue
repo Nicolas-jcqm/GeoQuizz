@@ -102,7 +102,6 @@ button:hover,#add a:hover{
     color: white;
 }
 #right{
-background-color:red;
 width:75%;
 height:100%;
 margin-left:25%;
