@@ -13,7 +13,7 @@
           <label>Password :</label>
           <input  v-model="user.password" id="password" type="password" />
         </div>
-        <div ><input class="btn-blue" type="submit" value="Inscription"/></div>
+        <div ><input class="btn-blue" type="submit" value="Connexion"/></div>
     </form>
   </div>
       <div id="formulaire">
@@ -21,15 +21,15 @@
         <form @submit.prevent="signup()">
           <div>
             <label>Username :</label>
-            <input v-model="user_signup.username" id="username" type="text" />
+            <input v-model="user_signup.username" id="username_signup" type="text" />
           </div>
           <div>
             <label>Email :</label>
-            <input v-model="user_signup.mail" id="mail" type="text" />
+            <input v-model="user_signup.mail" id="mail_signup" type="text" />
           </div>
           <div>
             <label>Password :</label>
-            <input  v-model="user_signup.password" id="password" type="password" />
+            <input  v-model="user_signup.password" id="password_signup" type="password" />
           </div>
           <div ><input class="btn-blue" type="submit" value="Inscription"/></div>
       </form>
@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import api from '../config/index'
-import router from '../router/index'
+import api from '@/config'
+import router from '@/router'
 export default {
   name: 'Signup',
   data () {
@@ -52,19 +52,27 @@ export default {
     },
     methods: {
       signup (){
-			     api.post('/signup',this.user_signup).then((response) =>{
-            alert("inscription réussis");
-            router.push("signup");
-           }).catch((error)=>{
+        if(this.user_signup.mail=="" || this.user_signup.password=="" || this.user_signup.username==""){
+            alert("Tous les champs sont obligatoire");
+        }else{
+        api.post('/signup',this.user_signup).then((response) =>{
+         alert("inscription réussis");
+         this.user_signup.mail="";
+         this.user_signup.password="";
+         this.user_signup.username="";
+         router.push({name:"Signup" });
+        }).catch((error)=>{
               alert(error.response.data);
            })
-
+           }
 			   },
       signin(){
         api.post('/signin',this.user).then((response) =>{
           sessionStorage.setItem('token',response.data.token);
           sessionStorage.setItem("isConnected",true);
-          router.push({name:'home'})
+          sessionStorage.setItem("mail",this.user.mail)
+          sessionStorage.setItem("userid",response.data.userid);
+          router.push({name:'Test'})
         }).catch((error)=>{
           alert(error.response.data);
         })
