@@ -1,7 +1,7 @@
 <template>
-  <div id="formule" @submit.prevent="add()">
+  <div id="formule">
     <h1> Créer une Série</h1>
-    <form>
+    <form @submit.prevent="add()"">
       <div>
         <label for="nom">Nom de la série</label>
         <input type="text" v-model="serie.nom" id="nom" name="ville"  required>
