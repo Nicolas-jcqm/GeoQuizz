@@ -22,12 +22,13 @@
                 <button type="button" class="btn btn-rep btn-1" @click="next()">Question suivante</button>
             </div>
         </div>
-        <div class="windows" v-else>
+        <div class="windows" id="jeux_end" v-else>
             <div class='jeux'>
                 <div id='info_unique'>Jeux terminé</div>
                 <div id='info_unique'>Score final : {{ score_actuel }}</div>
             </div>
             <button type="button" class="btn btn-4" @click="retour()">Retourner au menu</button>
+            <button type="button" id="button_score" class="btn btn-4" @click="putScore()">Sauvegardez votre score</button>
         </div>
   </div>
 </template>
@@ -174,8 +175,18 @@
                 this.$router.push({
                     path: '/'
                 })
-            }
+            },
 
+            putScore() {
+                this.$store.dispatch('putScore')
+                document.getElementById("button_score").remove()
+                var jump=document.createElement("br")
+                var saveelem=document.createElement("label")
+                var savetext=document.createTextNode("Score sauvegardé")
+                saveelem.appendChild(savetext)
+                document.getElementById("jeux_end").appendChild(jump)
+                document.getElementById("jeux_end").appendChild(saveelem)
+            }
         }
 
     }
@@ -305,6 +316,10 @@
         padding: 1em 2em;
         text-transform: inherit;
         transition: color 1s;
+    }
+
+    label {
+        margin-top: 2em;
     }
 
     .btn-1 {
