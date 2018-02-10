@@ -185,6 +185,12 @@ export default new Vuex.Store({
             commit('reset')
         },
 
+        putScore({commit,state},score){
+            api.put('parties/score?token='+state.jeux.partie.token,{
+                score: ""+state.score_actuel
+            })
+        },
+
         next_question({
             commit,
             state
@@ -192,6 +198,10 @@ export default new Vuex.Store({
             if (state.question_actuel >= state.question_total) {
                 console.log("Jeux terminé")
                 commit('jeuxEnd')
+
+                api.put('parties/status', {
+                    token: state.jeux.partie.token,
+                    estEnCours: false})
             } else {
                 //calcul le score
                 commit('calculScore', distance_calcule)
